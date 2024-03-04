@@ -1,8 +1,12 @@
-
-import 'package:my_app_car/screens/Add-page.dart';
-import 'package:my_app_car/services/car_service.dart';
-import 'package:my_app_car/utils/snackbar_helper.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:my_app_car/screens/my_car.dart';
+import 'package:my_app_car/services/car_service.dart';
+import 'package:my_app_car/utils/NavBar.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_app_car/utils/snackbar_helper.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CarListPage extends StatefulWidget {
   const CarListPage({Key? key}) : super(key: key);
@@ -11,8 +15,27 @@ class CarListPage extends StatefulWidget {
   State<CarListPage> createState() => _CarListPageState();
 }
 
+class TokenStorage {
+  static const String _tokenKey = 'token';
+
+  static Future<void> storeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_tokenKey, token);
+  }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_tokenKey);
+  }
+
+  static Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenKey);
+  }
+}
+
 class _CarListPageState extends State<CarListPage> {
-  bool isLoding = false;
+  bool isloding = true;
   List items = [];
 
   @override
@@ -24,109 +47,91 @@ class _CarListPageState extends State<CarListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
-        title: const Text("Car liste"),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+        ],
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text('Auto-Car'),
       ),
       body: Visibility(
-        visible: isLoding,
+        visible: isloding,
         child: Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: fetchCar,
-          child: Visibility(
-            visible: items.isNotEmpty,
-            replacement: Center(
-              child: Text(
-                'No Car Item',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            ),
-            child: ListView.builder(
-                itemCount: items.length,
-                padding: EdgeInsets.all(9),
-                itemBuilder: (context, index) {
-                  final item = items[index] as Map;
-                  final id = item['_id'] as String;
-                  return Card(
-                    child: ListTile(
-                      leading: CircleAvatar(child: Text('${index + 1}')),
-                      title: Text(item['Marque']),
-                      subtitle: Text(item['Modéle']),
-                      trailing: PopupMenuButton(
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            navigateCarEditPage(item);
-                          } else if (value == 'delete') {
-                            deleteById(id);
-                          }
-                        },
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                              child: Text('Edit'),
-                              value: 'edit',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Delete'),
-                              value: 'delete',
-                            ),
-                          ];
-                        },
+          child: ListView.builder(
+            itemCount: items.length,
+            padding: EdgeInsets.all(12),
+            itemBuilder: (context, index) {
+              final item = items[index] as Map;
+              final id = '${item['Id']}';
+
+              return Card(
+                child: ListTile(
+                  leading: Icon(Icons.directions_car),
+                  title: Text('${item['brand']} ${item['model']}'),
+                  subtitle: Text(
+                      'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}'),
+                  trailing: PopupMenuButton(onSelected: (value) {
+                    if (value == 'edit') {
+                      navigateToEditCarPage(item);
+                    } else if (value == 'delete') {
+                      deleteById(id);
+                    }
+                  }, itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        child: Text('Edit'),
+                        value: 'edit',
                       ),
-                    ),
-                  );
-                }),
+                      PopupMenuItem(
+                        child: Text('Delete'),
+                        value: 'delete',
+                      ),
+                    ];
+                  }),
+                ),
+              );
+            },
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: navigateCarAddPage, label: Text('Add Car')),
     );
   }
 
-  Future<void> navigateCarEditPage(Map item) async {
-    final route =
-        MaterialPageRoute(builder: (context) => AddCarPage(todo: item));
+  Future<void> navigateToEditCarPage(Map item) async {
+    final route = MaterialPageRoute(builder: (context) => MyCar(car: item));
     await Navigator.push(context, route);
     setState(() {
-      isLoding = true;
+      isloding = true;
     });
     fetchCar();
-  }
-
-  Future<void> navigateCarAddPage() async {
-    final route = MaterialPageRoute(builder: (context) => AddCarPage());
-    await Navigator.push(context, route);
-    setState(() {
-      isLoding = true;
-    });
-    fetchCar();
-  }
-
-  Future<void> deleteById(String id) async {
-    final iSsuccess = await CarService.deleteById(id);
-    if (iSsuccess) {
-      final filtred = items.where((element) => element['_id'] != id).toList();
-      setState(() {
-        items = filtred;
-      });
-    } else {
-      showErroMessage(context,message: "Deletion failed ");
-    }
   }
 
   Future<void> fetchCar() async {
-    final response = await CarService.fetchCar();
+    final response = await CarService.fetchcar();
     if (response != null) {
       setState(() {
         items = response;
       });
     } else {
-      showErroMessage(context, message:'Somthing went  wrong');
+      showErroMessage(context, message: 'Somthing went Wrong');
     }
     setState(() {
-      isLoding = false;
+      isloding = false;
     });
   }
 
-  
+  Future<void> deleteById(id) async {
+    final isSuccess = await CarService.deleteBycar(id);
+    if (isSuccess) {
+      final filtred = items.where((element) => element['Id'] != id).toList();
+      setState(() {
+        items = filtred;
+      });
+    } else {
+      showErroMessage(context, message: "Deletion failed ");
+    }
+  }
 }

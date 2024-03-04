@@ -4,7 +4,8 @@ class DashboardLightsPage extends StatelessWidget {
   final String selectedBrand;
   final String selectedModel;
 
-  DashboardLightsPage({required this.selectedBrand, required this.selectedModel});
+  DashboardLightsPage(
+      {required this.selectedBrand, required this.selectedModel});
 
   List<String> dashboardLights = [
     'Engine Light',

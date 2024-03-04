@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_app_car/screens/car_list.dart';
+import 'package:my_app_car/utils/snackbar_helper.dart';
 
 class MyCar extends StatefulWidget {
-  const MyCar({Key? key}) : super(key: key);
+  final Map? car;
+
+  const MyCar({Key? key, this.car}) : super(key: key);
 
   @override
   State<MyCar> createState() => _MyCarState();
@@ -13,17 +17,21 @@ class MyCar extends StatefulWidget {
 
 class _MyCarState extends State<MyCar> {
   List<String> vehicleBrands = [
-    'Brand A',
-    'Brand B',
-    'Brand C',
-    'Brand D',
-    'Brand E',
-    'Brand F',
-    'Brand G'
+    'Toyota',
+    'Honda',
+    'Ford',
+    'Chevrolet',
+    'Volkswagen',
   ];
-  List<String> vehicleModels = ['Model A', 'Model B', 'Model C'];
-  String selectedBrand = 'Brand A';
-  String selectedModel = 'Model A';
+  Map<String, List<String>> vehicleModels = {
+    'Toyota': ['Camry', 'Corolla', 'Rav4'],
+    'Honda': ['Accord', 'Civic', 'CR-V'],
+    'Ford': ['F-150', 'Escape', 'Focus'],
+    'Chevrolet': ['Silverado', 'Equinox', 'Malibu'],
+    'Volkswagen': ['Jetta', 'Tiguan', 'Passat'],
+  };
+  String selectedBrand = 'Toyota';
+  String selectedModel = 'Camry';
   String age = '';
   String km = '';
   DateTime? lastOilChangeDate;
@@ -31,6 +39,16 @@ class _MyCarState extends State<MyCar> {
   final ageController = TextEditingController();
   final kmController = TextEditingController();
   final lastOilChangeController = TextEditingController();
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final car = widget.car;
+    if (car != null) {
+      isEdit = true;
+    }
+  }
 
   @override
   void dispose() {
@@ -60,36 +78,14 @@ class _MyCarState extends State<MyCar> {
     );
   }
 
-  void sendCarInformation(String brand, String model, String age, String km,
-      String lastOilChangeDate) async {
-    Map<String, String> body = {
-      'brand': brand,
-      'model': model,
-      'age': age,
-      'km': km,
-      'lastOilChangeDate': lastOilChangeDate,
-    };
-    
-    const url = "http://localhost:3000/voiture/add";
-    final uri = Uri.parse(url);
-    final response = await http.post(uri,
-        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
-    print(body);
-    print(url);
-
-    if (response.statusCode == 201) {
-      print('Car information sent successfully!');
-    } else {
-      print(
-          'Failed to send car information. Status code: ${response.statusCode}');
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(" MY CAR "),
+        backgroundColor: Color.fromARGB(197, 158, 158, 158),
+        title: Text(isEdit ? 'EditCar' : " MY CAR "),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -107,6 +103,7 @@ class _MyCarState extends State<MyCar> {
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedBrand = newValue!;
+                        selectedModel = vehicleModels[selectedBrand]![0];
                       });
                     },
                     items: vehicleBrands.map((String brand) {
@@ -132,7 +129,7 @@ class _MyCarState extends State<MyCar> {
                         selectedModel = newValue!;
                       });
                     },
-                    items: vehicleModels.map((String model) {
+                    items: vehicleModels[selectedBrand]!.map((String model) {
                       return DropdownMenuItem<String>(
                         value: model,
                         child: Row(
@@ -203,21 +200,72 @@ class _MyCarState extends State<MyCar> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (age.isNotEmpty &&
-                    km.isNotEmpty &&
-                    lastOilChangeDate != null) {
-                  sendCarInformation(selectedBrand, selectedModel, age, km,
-                      lastOilChangeDate.toString());
-                } else {
-                  showAlert('Please fill in all fields.');
-                }
-              },
-              child: Text('Submit'),
+              onPressed: isEdit
+                  ? updateData
+                  : () => sendCarInformation(selectedBrand, selectedModel, age,
+                      km, lastOilChangeDate.toString()),
+              child: Text(isEdit ? 'Update' : 'Submit'),
             ),
           ],
         ),
       ),
     );
+  }
+  
+void sendCarInformation(String brand, String model, String age, String km,
+      String lastOilChangeDate) async {
+    Map<String, String> body = {
+      'brand': brand,
+      'model': model,
+      'age': age,
+      'km': km,
+      'lastOilChangeDate': lastOilChangeDate,
+    };
+    String? token = await TokenStorage.getToken();
+    const url = "http://localhost:3000/voiture/add";
+    final uri = Uri.parse(url);
+    final response = await http.post(uri, body: jsonEncode(body), headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer $token'
+    });
+
+    if (response.statusCode == 201) {
+      ageController.text = "";
+      kmController.text = "";
+      lastOilChangeController.text = "";
+      showSuccessMessage(context, message:'Creation Success ☻ ');
+    } else {
+      print(
+          'Failed to send car information. Status code: ${response.statusCode}');
+      showErroMessage(context, message:'Creation failed');
+    }
+  }
+
+  Future<void> updateData() async {
+    final car = widget.car;
+    if (car == null) {
+      print('You can not call update without car  ');
+      return;
+    }
+    final id = car["Id"];
+    final age = ageController.text;
+    final km = kmController.text;
+    final lastOilChange = lastOilChangeController.text;
+
+    final body = {"age": age, "km": km, "lastOilChange": lastOilChange};
+    final url = "http://localhost:3000/voiture/$id";
+    final uri = Uri.parse(url);
+    final response = await http.patch(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    
+    if (response.statusCode == 200) {
+      showSuccessMessage(context, message: " Update Success");
+    } else {
+      print(response.statusCode);
+      showErroMessage(context, message:'Updation failed');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:my_app_car/screens/home.dart';
+import 'package:my_app_car/screens/car_list.dart';
 import 'package:my_app_car/screens/register.dart';
 import 'package:http/http.dart' as http;
 
@@ -92,7 +92,9 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 201) {
       showSuccessMessage('Welcom ☻ ');
       print('Information sent successfully!');
-      final route = MaterialPageRoute(builder: (context) => MyHomePage());
+      final token = jsonDecode(response.body)["acces token"];
+      TokenStorage.storeToken(token);
+      final route = MaterialPageRoute(builder: (context) => CarListPage());
       await Navigator.push(context, route);
     } else {
       print('Failed to send information. Status code: ${response.statusCode}');

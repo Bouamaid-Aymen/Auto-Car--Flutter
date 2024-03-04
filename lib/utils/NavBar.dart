@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
+import 'package:my_app_car/screens/car_list.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/my_car.dart';
 
@@ -29,7 +30,11 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DashboardLightsPage(selectedBrand: "dfsfsf",selectedModel: 'fdsfs',)),
+                MaterialPageRoute(
+                    builder: (context) => DashboardLightsPage(
+                          selectedBrand: "dfsfsf",
+                          selectedModel: 'fdsfs',
+                        )),
               );
             },
           ),
@@ -45,19 +50,6 @@ class NavBar extends StatelessWidget {
             title: Text('Location'),
             onTap: () => null,
           ),
-          /*Divider(),
-          ListTile(
-            leading: IconButton(
-              onPressed: () {
-                // Action à effectuer lors de l'appui sur IconButton
-              },
-              icon: Icon(Icons.location_on),
-            ),
-            title: Text('Location'),
-            onTap: () {
-              // Action à effectuer lors de l'appui sur le ListTile
-            },
-          ),*/
           Divider(),
           ListTile(
             leading: Icon(Icons.contact_support),

@@ -7,3 +7,13 @@ void showErroMessage(BuildContext context, {required String message}) {
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+void showSuccessMessage(BuildContext context, {required String message})  {
+    final snackBar = SnackBar(
+      content: Center(
+        child: Text(
+          message,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
