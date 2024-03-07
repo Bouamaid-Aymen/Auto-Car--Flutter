@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_app_car/screens/car_list.dart';
+import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
 
 class MyCar extends StatefulWidget {
@@ -16,22 +16,14 @@ class MyCar extends StatefulWidget {
 }
 
 class _MyCarState extends State<MyCar> {
-  List<String> vehicleBrands = [
-    'Toyota',
-    'Honda',
-    'Ford',
-    'Chevrolet',
-    'Volkswagen',
-  ];
-  Map<String, List<String>> vehicleModels = {
-    'Toyota': ['Camry', 'Corolla', 'Rav4'],
-    'Honda': ['Accord', 'Civic', 'CR-V'],
-    'Ford': ['F-150', 'Escape', 'Focus'],
-    'Chevrolet': ['Silverado', 'Equinox', 'Malibu'],
-    'Volkswagen': ['Jetta', 'Tiguan', 'Passat'],
-  };
-  String selectedBrand = 'Toyota';
-  String selectedModel = 'Camry';
+  var _brands = [];
+  var _models = [];
+  String? selectedBrand;
+  String? selectedModel;
+  String? selectedBrandId;
+
+  bool isBrandSelected = false;
+
   String age = '';
   String km = '';
   DateTime? lastOilChangeDate;
@@ -48,6 +40,7 @@ class _MyCarState extends State<MyCar> {
     if (car != null) {
       isEdit = true;
     }
+    getWorldData();
   }
 
   @override
@@ -58,93 +51,80 @@ class _MyCarState extends State<MyCar> {
     super.dispose();
   }
 
-  void showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Alert'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(197, 158, 158, 158),
-        title: Text(isEdit ? 'EditCar' : " MY CAR "),
+        title: Text(isEdit ? 'Edit Car' : 'My Car'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Enter vehicle information',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
+            if (_brands.isEmpty)
+              const Center(child: CircularProgressIndicator())
+            else
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
+                    underline: Container(),
+                    hint: Text('Select Brand'),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    isDense: true,
+                    isExpanded: true,
                     value: selectedBrand,
-                    onChanged: (String? newValue) {
+                    onChanged: (value) {
                       setState(() {
-                        selectedBrand = newValue!;
-                        selectedModel = vehicleModels[selectedBrand]![0];
+                        selectedBrand = value;
+                        isBrandSelected = true;
+                        selectedModel = null;
+                        for (int i = 0; i < _brands.length; i++) {
+                          if (_brands[i]['name'] == value) {
+                            _models = _brands[i]['model'];
+                            selectedBrandId = _brands[i]['id'].toString();
+                          }
+                        }
                       });
                     },
-                    items: vehicleBrands.map((String brand) {
+                    items: _brands.map((brand) {
                       return DropdownMenuItem<String>(
-                        value: brand,
-                        child: Row(
-                          children: [
-                            Icon(Icons.directions_car),
-                            SizedBox(width: 5),
-                            Text(brand),
-                          ],
-                        ),
-                      );
+                          value: brand['name'], child: Text(brand['name']));
                     }).toList(),
                   ),
                 ),
-                const SizedBox(width: 20),
-                Expanded(
+              ),
+            if (isBrandSelected)
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Container(
+                  padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
+                    underline: Container(),
+                    hint: Text('Select Model'),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    isDense: true,
+                    isExpanded: true,
                     value: selectedModel,
-                    onChanged: (String? newValue) {
+                    onChanged: (value) {
                       setState(() {
-                        selectedModel = newValue!;
+                        selectedModel = value;
                       });
                     },
-                    items: vehicleModels[selectedBrand]!.map((String model) {
+                    items: _models.map((model) {
                       return DropdownMenuItem<String>(
-                        value: model,
-                        child: Row(
-                          children: [
-                            Icon(Icons.directions_car),
-                            SizedBox(width: 5),
-                            Text(model),
-                          ],
-                        ),
-                      );
+                          value: model['name'], child: Text(model['name']));
                     }).toList(),
                   ),
                 ),
-              ],
-            ),
+              )
+            else
+              Container(),
+            const SizedBox(height: 20),
             const SizedBox(height: 20),
             TextFormField(
               controller: ageController,
@@ -211,18 +191,18 @@ class _MyCarState extends State<MyCar> {
       ),
     );
   }
-  
-void sendCarInformation(String brand, String model, String age, String km,
+
+  void sendCarInformation(String? brand, String? model, String age, String km,
       String lastOilChangeDate) async {
     Map<String, String> body = {
-      'brand': brand,
-      'model': model,
+      'brand': brand!,
+      'model': model!,
       'age': age,
       'km': km,
       'lastOilChangeDate': lastOilChangeDate,
     };
     String? token = await TokenStorage.getToken();
-    const url = "http://localhost:3000/voiture/add";
+    const url = 'http://localhost:3000/voiture/add';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(body), headers: {
       'Content-Type': 'application/json',
@@ -230,14 +210,14 @@ void sendCarInformation(String brand, String model, String age, String km,
     });
 
     if (response.statusCode == 201) {
-      ageController.text = "";
-      kmController.text = "";
-      lastOilChangeController.text = "";
-      showSuccessMessage(context, message:'Creation Success ☻ ');
+      ageController.text = '';
+      kmController.text = '';
+      lastOilChangeController.text = '';
+      showSuccessMessage(context, message: 'Creation Success ☻ ');
     } else {
       print(
           'Failed to send car information. Status code: ${response.statusCode}');
-      showErroMessage(context, message:'Creation failed');
+      showErroMessage(context, message: 'Creation failed');
     }
   }
 
@@ -247,25 +227,37 @@ void sendCarInformation(String brand, String model, String age, String km,
       print('You can not call update without car  ');
       return;
     }
-    final id = car["Id"];
+    final id = car['Id'];
     final age = ageController.text;
     final km = kmController.text;
     final lastOilChange = lastOilChangeController.text;
 
-    final body = {"age": age, "km": km, "lastOilChange": lastOilChange};
-    final url = "http://localhost:3000/voiture/$id";
+    final body = {'age': age, 'km': km, 'lastOilChange': lastOilChange};
+    final url = 'http://localhost:3000/voiture/$id';
     final uri = Uri.parse(url);
     final response = await http.patch(
       uri,
       body: jsonEncode(body),
       headers: {'Content-Type': 'application/json'},
     );
-    
+
     if (response.statusCode == 200) {
-      showSuccessMessage(context, message: " Update Success");
+      showSuccessMessage(context, message: ' Update Success');
     } else {
       print(response.statusCode);
-      showErroMessage(context, message:'Updation failed');
+      showErroMessage(context, message: 'Updation failed');
+    }
+  }
+
+  Future<void> getWorldData() async {
+    const url = 'http://localhost:3000/car/brand';
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+
+      setState(() {
+        _brands = jsonResponse;
+      });
     }
   }
 }

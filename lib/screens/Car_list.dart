@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/my_car.dart';
 import 'package:my_app_car/services/car_service.dart';
 import 'package:my_app_car/utils/NavBar.dart';
-import 'package:http/http.dart' as http;
 import 'package:my_app_car/utils/snackbar_helper.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';

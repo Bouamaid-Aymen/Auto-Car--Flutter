@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:my_app_car/screens/car_list.dart';
+import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/register.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,14 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    /*final todo = widget.todo;
-    if (todo != null) {
-      isEdit = true;
-      final title = todo['title'];
-      final description = todo['description'];
-      titleController.text = title;
-      descriptionController.text = description;
-    }*/
+   
   }
 
   @override
