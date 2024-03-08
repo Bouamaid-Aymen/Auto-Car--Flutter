@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app_car/screens/maintenance.dart';
 import 'package:my_app_car/screens/my_car.dart';
 import 'package:my_app_car/services/car_service.dart';
 import 'package:my_app_car/utils/NavBar.dart';
@@ -76,16 +77,27 @@ class _CarListPageState extends State<CarListPage> {
                       navigateToEditCarPage(item);
                     } else if (value == 'delete') {
                       deleteById(id);
-                    }
+                    } 
                   }, itemBuilder: (context) {
                     return [
                       PopupMenuItem(
-                        child: Text('Edit'),
+                        child: Text('EDIT'),
                         value: 'edit',
                       ),
                       PopupMenuItem(
-                        child: Text('Delete'),
+                        child: Text('DELETE'),
                         value: 'delete',
+                        
+                      ),
+                      PopupMenuItem(
+                        child: Text('CAHIER DE MAINTENANCE '),
+                        value: 'maintenace ',
+                        onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CarMaintenancePage()),
+              );
+            },
                       ),
                     ];
                   }),
@@ -96,6 +108,11 @@ class _CarListPageState extends State<CarListPage> {
         ),
       ),
     );
+  }
+
+  Future<void> navigateTo() async {
+    final route = MaterialPageRoute(builder: (context) => CarMaintenancePage());
+    await Navigator.push(context, route);
   }
 
   Future<void> navigateToEditCarPage(Map item) async {
