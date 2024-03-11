@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/my_car.dart';
@@ -61,7 +62,8 @@ class NavBar extends StatelessWidget {
               IconData(0xe243, fontFamily: 'MaterialIcons'),
             ),
             title: Text('Exite'),
-            onTap: () {
+            onTap: () async {
+              await TokenStorage.removeToken();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),

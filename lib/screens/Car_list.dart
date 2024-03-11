@@ -34,7 +34,7 @@ class TokenStorage {
 }
 
 class _CarListPageState extends State<CarListPage> {
-  bool isloding = true;
+  bool isLoading = true;
   List items = [];
 
   @override
@@ -51,11 +51,13 @@ class _CarListPageState extends State<CarListPage> {
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
         ],
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text('Auto-Car'),
+        title: Text(
+          'Auto-Car',
+          selectionColor: Colors.white,
+        ),
       ),
       body: Visibility(
-        visible: isloding,
+        visible: isLoading,
         child: Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: fetchCar,
@@ -77,7 +79,7 @@ class _CarListPageState extends State<CarListPage> {
                       navigateToEditCarPage(item);
                     } else if (value == 'delete') {
                       deleteById(id);
-                    } 
+                    }
                   }, itemBuilder: (context) {
                     return [
                       PopupMenuItem(
@@ -87,17 +89,32 @@ class _CarListPageState extends State<CarListPage> {
                       PopupMenuItem(
                         child: Text('DELETE'),
                         value: 'delete',
-                        
                       ),
                       PopupMenuItem(
                         child: Text('CAHIER DE MAINTENANCE '),
-                        value: 'maintenace ',
+                        value: 'maintenance',
                         onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CarMaintenancePage()),
-              );
-            },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CarMaintenancePage(
+                                      carId: id, // Passer l'ID de la voiture
+                                    )),
+                          );
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: Text('VOYANT '),
+                        value: 'voyant',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CarMaintenancePage(
+                                      carId: id, // Passer l'ID de la voiture
+                                    )),
+                          );
+                        },
                       ),
                     ];
                   }),
@@ -110,16 +127,11 @@ class _CarListPageState extends State<CarListPage> {
     );
   }
 
-  Future<void> navigateTo() async {
-    final route = MaterialPageRoute(builder: (context) => CarMaintenancePage());
-    await Navigator.push(context, route);
-  }
-
   Future<void> navigateToEditCarPage(Map item) async {
     final route = MaterialPageRoute(builder: (context) => MyCar(car: item));
     await Navigator.push(context, route);
     setState(() {
-      isloding = true;
+      isLoading = true;
     });
     fetchCar();
   }
@@ -131,10 +143,10 @@ class _CarListPageState extends State<CarListPage> {
         items = response;
       });
     } else {
-      showErroMessage(context, message: 'Somthing went Wrong');
+      showErroMessage(context, message: 'Something went wrong');
     }
     setState(() {
-      isloding = false;
+      isLoading = false;
     });
   }
 

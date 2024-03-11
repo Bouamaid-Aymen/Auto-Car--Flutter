@@ -184,8 +184,8 @@ class _MyCarState extends State<MyCar> {
               onPressed: isEdit
                   ? updateData
                   : () => sendCarInformation(selectedBrand, selectedModel, age,
-                      km, lastOilChangeDate.toString()),
-              child: Text(isEdit ? 'Update' : 'Submit'),
+                      km, lastOilChangeDate.toString()),//si clicker sursendCArInforma aller page CarListPage
+              child: Text(isEdit ? 'Update' : 'SAVE'),
             ),
           ],
         ),
@@ -214,6 +214,8 @@ class _MyCarState extends State<MyCar> {
       ageController.text = '';
       kmController.text = '';
       lastOilChangeController.text = '';
+      final route = MaterialPageRoute(builder: (context) => CarListPage());
+        await Navigator.push(context, route);
       showSuccessMessage(context, message: 'Creation Success ☻ ');
     } else {
       print(

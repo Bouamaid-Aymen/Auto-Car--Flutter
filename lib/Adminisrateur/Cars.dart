@@ -202,16 +202,15 @@ class _DropdownScreenState extends State<DropdownScreen> {
   }
 
   Future<void> deletebrandmodel() async {
-      final url = "http://localhost:3000/car/$selectedBrandId";
-      final uri = Uri.parse(url);
-      final response = await http.delete(uri);
-      
-      if (response.statusCode == 200) {
-        showSuccessMessage(context,
-            message: "brand: $selectedBrand est supprimer ");
-      } else {
-        print(response.body);
-      }
-  
+    final url = "http://localhost:3000/car/$selectedBrandId";
+    final uri = Uri.parse(url);
+    final response = await http.delete(uri);
+
+    if (response.statusCode == 200) {
+      final route = MaterialPageRoute(builder: (context) => DropdownScreen());
+      await Navigator.push(context, route);
+    } else {
+      print(response.body);
+    }
   }
 }
