@@ -27,12 +27,11 @@ class CarService {
     }
   }
 
-  static Future<List?> fetchBRa() async {
-    const url = "http://localhost:3000/voiture/mycars";
+  static Future<List?> fetchuser() async {
+    const url = "http://localhost:3000/users/";
     final uri = Uri.parse(url);
-    String? token = await TokenStorage.getToken();
     final response =
-        await http.get(uri, headers: {'authorization': 'Bearer $token'});
+        await http.get(uri);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
 
@@ -41,4 +40,12 @@ class CarService {
       return null;
     }
   }
+  static Future<bool> deleteByuser(String id) async {
+    final url = "http://localhost:3000/users/$id";
+    final uri = Uri.parse(url);
+    final response = await http.delete(uri);
+
+    return response.statusCode == 200;
+  }
+
 }

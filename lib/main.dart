@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Auto CAr',
       theme: ThemeData.dark(),
+      //(useMaterial3: true),
       home: const Splace_Screen(),
     );
   }

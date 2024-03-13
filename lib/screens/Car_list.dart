@@ -103,19 +103,6 @@ class _CarListPageState extends State<CarListPage> {
                           );
                         },
                       ),
-                      PopupMenuItem(
-                        child: Text('VOYANT '),
-                        value: 'voyant',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CarMaintenancePage(
-                                      carId: id, // Passer l'ID de la voiture
-                                    )),
-                          );
-                        },
-                      ),
                     ];
                   }),
                 ),

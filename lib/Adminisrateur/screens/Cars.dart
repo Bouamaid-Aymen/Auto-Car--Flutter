@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_app_car/utils/NavBarAdmin.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
 
 class DropdownScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class _DropdownScreenState extends State<DropdownScreen> {
   Widget build(BuildContext context) {
     getWorldData();
     return Scaffold(
+      drawer: NavBarAdmin(),
       appBar: AppBar(title: Text("CARS")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -88,6 +90,7 @@ class _DropdownScreenState extends State<DropdownScreen> {
                           selectedModel = value;
                         });
                       },
+                      
                       items: _models.map((model) {
                         return DropdownMenuItem<String>(
                             value: model["id"].toString(),
