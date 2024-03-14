@@ -34,57 +34,56 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: Padding(
-  padding: const EdgeInsets.all(40),
-  child: Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextField(
-          controller: usernameController,
-          decoration: InputDecoration(
-            hintText: 'USERNAME',
-            prefixIcon: Icon(Icons.person),
-          ),
-          onChanged: (value) {
-            // Appliquer un filtre à value si nécessaire
-          },
-        ),
-        SizedBox(height: 10),
-        TextField(
-          controller: passwordController,
-          decoration: InputDecoration(
-            hintText: 'PASSWORD',
-            prefixIcon: Icon(Icons.lock),
-            suffixIcon: IconButton(
-              icon: Icon(
-                obscureText ? Icons.visibility : Icons.visibility_off,
+        padding: const EdgeInsets.all(40),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  hintText: 'USERNAME',
+                  prefixIcon: Icon(Icons.person),
+                ),
+                onChanged: (value) {
+                  // Appliquer un filtre à value si nécessaire
+                },
               ),
-              onPressed: () {
-                setState(() {
-                  obscureText = !obscureText;
-                });
-              },
-            ),
+              SizedBox(height: 10),
+              TextField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  hintText: 'PASSWORD',
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscureText ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },
+                  ),
+                ),
+                keyboardType: TextInputType.text,
+                obscureText: obscureText,
+                onChanged: (value) {
+                  // Appliquer un filtre à value si nécessaire
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => LoginApi(),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Connection'),
+                ),
+              )
+            ],
           ),
-          keyboardType: TextInputType.text,
-          obscureText: obscureText,
-          onChanged: (value) {
-            // Appliquer un filtre à value si nécessaire
-          },
         ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () => LoginApi(),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Connection'),
-          ),
-        )
-      ],
-    ),
-  ),
-),
-
+      ),
     );
   }
 
@@ -108,8 +107,10 @@ class _LoginPageState extends State<LoginPage> {
       print('Information sent successfully!');
       final token = jsonDecode(response.body)["acces token"];
       final userRole = jsonDecode(response.body)["role"];
-      print(userRole);
-      TokenStorage.storeToken(token);
+      final email = jsonDecode(response.body)["email"];
+
+      TokenStorage.storeToken(token, username, email);
+
       if (userRole == "USER") {
         final route = MaterialPageRoute(builder: (context) => CarListPage());
         await Navigator.push(context, route);
@@ -134,7 +135,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void showSuccessMessage(String message) {
     final snackBar = SnackBar(
-      content: Center(child: Text(message)),
+      content:
+          Center(child: Text(message, style: TextStyle(color: Colors.white))),
+      backgroundColor: Colors.green,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

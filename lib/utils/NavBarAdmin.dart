@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/Adminisrateur/screens/Cars.dart';
-import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/Adminisrateur/screens/listeuser.dart';
 import 'package:my_app_car/screens/login_page.dart';
 
@@ -41,7 +40,7 @@ class NavBarAdmin extends StatelessWidget {
             ),
             title: Text('Exite'),
             onTap: () async {
-              await TokenStorage.removeToken();
+             
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),

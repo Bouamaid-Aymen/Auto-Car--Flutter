@@ -16,15 +16,27 @@ class CarListPage extends StatefulWidget {
 
 class TokenStorage {
   static const String _tokenKey = 'token';
+  static late String _username = 'username';
+  static late String _email = 'email';
 
-  static Future<void> storeToken(String token) async {
+  static Future<void> storeToken(String token, String username,String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
+    _username = username;
+    _email = email;
   }
 
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
+  }
+
+  static String getUsername() {
+    return _username;
+  }
+
+  static String getEmail() {
+    return _email;
   }
 
   static Future<void> removeToken() async {
@@ -48,6 +60,7 @@ class _CarListPageState extends State<CarListPage> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
+        backgroundColor: (Colors.blue),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
         ],

@@ -8,16 +8,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key); // Correction de la syntaxe du constructeur
 
   @override
   Widget build(BuildContext context) {
     SplaceController splaceController = Get.put(SplaceController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Auto CAr',
+      title: 'Auto Car',
       theme: ThemeData.dark(),
-      //(useMaterial3: true),
       home: const Splace_Screen(),
     );
   }

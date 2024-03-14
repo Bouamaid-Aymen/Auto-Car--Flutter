@@ -55,7 +55,7 @@ class _MyCarState extends State<MyCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(197, 158, 158, 158),
+        backgroundColor: (Colors.blue),
         title: Text(isEdit ? 'Edit Car' : 'My Car'),
       ),
       body: Padding(
@@ -182,8 +182,13 @@ class _MyCarState extends State<MyCar> {
             ElevatedButton(
               onPressed: isEdit
                   ? updateData
-                  : () => sendCarInformation(selectedBrand, selectedModel, age,
-                      km, lastOilChangeDate.toString()),//si clicker sursendCArInforma aller page CarListPage
+                  : () => sendCarInformation(
+                      selectedBrand,
+                      selectedModel,
+                      age,
+                      km,
+                      lastOilChangeDate
+                          .toString()), //si clicker sursendCArInforma aller page CarListPage
               child: Text(isEdit ? 'Update' : 'SAVE'),
             ),
           ],
@@ -214,7 +219,7 @@ class _MyCarState extends State<MyCar> {
       kmController.text = '';
       lastOilChangeController.text = '';
       final route = MaterialPageRoute(builder: (context) => CarListPage());
-        await Navigator.push(context, route);
+      await Navigator.push(context, route);
       showSuccessMessage(context, message: 'Creation Success ☻ ');
     } else {
       print(
@@ -262,6 +267,4 @@ class _MyCarState extends State<MyCar> {
       });
     }
   }
-
-  
 }
