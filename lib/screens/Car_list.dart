@@ -19,7 +19,8 @@ class TokenStorage {
   static late String _username = 'username';
   static late String _email = 'email';
 
-  static Future<void> storeToken(String token, String username,String email) async {
+  static Future<void> storeToken(
+      String token, String username, String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
     _username = username;
@@ -57,16 +58,25 @@ class _CarListPageState extends State<CarListPage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchCar();
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        backgroundColor: (Colors.blue),
+        backgroundColor: (const Color.fromARGB(0, 33, 149, 243)),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
         ],
-        title: Text(
-          'Auto-Car',
-          selectionColor: Colors.white,
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 8),
+              Text(
+                'Liste des voitures ',
+              ),
+              Icon(Icons.content_paste_rounded, color: Colors.white)
+            ],
+          ),
         ),
       ),
       body: Visibility(
@@ -74,53 +84,96 @@ class _CarListPageState extends State<CarListPage> {
         child: Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: fetchCar,
-          child: ListView.builder(
-            itemCount: items.length,
-            padding: EdgeInsets.all(12),
-            itemBuilder: (context, index) {
-              final item = items[index] as Map;
-              final id = '${item['Id']}';
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/garage.avif'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: ListView.builder(
+              itemCount: items.length,
+              padding: EdgeInsets.all(12),
+              itemBuilder: (context, index) {
+                final item = items[index] as Map;
+                final id = '${item['Id']}';
 
-              return Card(
-                child: ListTile(
-                  leading: Icon(Icons.directions_car),
-                  title: Text('${item['brand']} ${item['model']}'),
-                  subtitle: Text(
-                      'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}'),
-                  trailing: PopupMenuButton(onSelected: (value) {
-                    if (value == 'edit') {
-                      navigateToEditCarPage(item);
-                    } else if (value == 'delete') {
-                      deleteById(id);
-                    }
-                  }, itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        child: Text('EDIT'),
-                        value: 'edit',
-                      ),
-                      PopupMenuItem(
-                        child: Text('DELETE'),
-                        value: 'delete',
-                      ),
-                      PopupMenuItem(
-                        child: Text('CAHIER DE MAINTENANCE '),
-                        value: 'maintenance',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CarMaintenancePage(
-                                      carId: id, // Passer l'ID de la voiture
-                                    )),
-                          );
-                        },
-                      ),
-                    ];
-                  }),
-                ),
-              );
-            },
+                return Card(
+                  child: ListTile(
+                    leading: Icon(Icons.directions_car, color: Colors.blue),
+                    title: Text(
+                      '${item['brand']} ${item['model']}',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    subtitle: Text(
+                      'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}',
+                    ),
+                    trailing: PopupMenuButton(
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          navigateToEditCarPage(item);
+                        } else if (value == 'delete') {
+                          deleteById(id);
+                        }
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(Icons.edit, color: Colors.blue),
+                                SizedBox(width: 8),
+                                Text(
+                                  'MODIFIER',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                            value: 'edit',
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(Icons.delete, color: Colors.red),
+                                SizedBox(width: 8),
+                                Text(
+                                  'SUPPRIMER',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
+                            value: 'delete',
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(Icons.build, color: Colors.green),
+                                SizedBox(width: 8),
+                                Text(
+                                  'CAHIER DE MAINTENANCE ',
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            value: 'maintenance',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CarMaintenancePage(
+                                    carId: id, // Passer l'ID de la voiture
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ];
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -153,6 +206,7 @@ class _CarListPageState extends State<CarListPage> {
   Future<void> deleteById(id) async {
     final isSuccess = await CarService.deleteBycar(id);
     if (isSuccess) {
+      showSuccessMessage(context, message: "Deletion success");
       final filtred = items.where((element) => element['Id'] != id).toList();
       setState(() {
         items = filtred;

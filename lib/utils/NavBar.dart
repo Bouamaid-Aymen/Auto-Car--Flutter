@@ -43,8 +43,8 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => DashboardLightsPage(
-                          selectedBrand: "dfsfsf",
-                          selectedModel: 'fdsfs',
+                          selectedBrand: "",
+                          selectedModel: '',
                         )),
               );
             },

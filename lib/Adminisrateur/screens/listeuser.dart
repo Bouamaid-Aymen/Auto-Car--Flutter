@@ -26,9 +26,18 @@ class _userListPageState extends State<userListPage> {
     return Scaffold(
       drawer: NavBarAdmin(),
       appBar: AppBar(
-        title: Text(
-          'USERS',
-          selectionColor: Colors.white,
+        backgroundColor: Colors.blue,
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 8),
+              Text(
+                'Liste des utilisateurs ',
+              ),
+              Icon(Icons.content_paste_rounded, color: Colors.white)
+            ],
+          ),
         ),
       ),
       body: Visibility(
@@ -45,9 +54,11 @@ class _userListPageState extends State<userListPage> {
 
               return Card(
                 child: ListTile(
-                  leading: Icon(Icons.account_circle_sharp),
+                  leading: Icon(Icons.account_circle_sharp, color: Colors.blue),
                   title: Text(
-                      'Username:${item['username']}      Email : ${item['email']}'),
+                    'Username:${item['username']}      Email : ${item['email']}',
+                    style: TextStyle(color: Colors.blue),
+                  ),
                   subtitle: Text(
                       'Create at : ${item['CreatedAt']}    Role: ${item['role']}'),
                   trailing: PopupMenuButton(onSelected: (value) {
@@ -57,7 +68,16 @@ class _userListPageState extends State<userListPage> {
                   }, itemBuilder: (context) {
                     return [
                       PopupMenuItem(
-                        child: Text('DELETE'),
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text(
+                              'SUPPRIMER',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        ),
                         value: 'delete',
                       ),
                     ];

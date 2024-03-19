@@ -10,11 +10,21 @@ class NavBarAdmin extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
+          UserAccountsDrawerHeader(
+            accountName: Text("ADMIN"),
+            accountEmail: Text(""),
+            currentAccountPicture: CircleAvatar(
+              child: Icon(Icons.account_circle, size: 48.0),
+            ),
+          ),
           ListTile(
             leading: Icon(
               IconData(0xe1d7, fontFamily: 'MaterialIcons'),
             ),
-            title: Text('Garage'),
+            title: Text(
+              'Garage',
+              style: TextStyle(color: Colors.blue),
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -25,7 +35,10 @@ class NavBarAdmin extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.assignment_outlined),
-            title: Text('USERS '),
+            title: Text(
+              'USERS ',
+              style: TextStyle(color: Colors.blue),
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -36,11 +49,17 @@ class NavBarAdmin extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(
-              IconData(0xe243, fontFamily: 'MaterialIcons'),
+              color: Colors.red,
+              IconData(
+                0xe243,
+                fontFamily: 'MaterialIcons',
+              ),
             ),
-            title: Text('Exite'),
+            title: Text(
+              'Exite',
+              style: TextStyle(color: Colors.blue),
+            ),
             onTap: () async {
-             
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
