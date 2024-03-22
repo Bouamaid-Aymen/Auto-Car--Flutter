@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/Adminisrateur/screens/Cars.dart';
+import 'package:my_app_car/Adminisrateur/screens/addV.dart';
 import 'package:my_app_car/Adminisrateur/screens/listeuser.dart';
 import 'package:my_app_car/screens/login_page.dart';
 
@@ -34,15 +35,29 @@ class NavBarAdmin extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.assignment_outlined),
+            leading: Icon(Icons.apps_outlined),
             title: Text(
-              'USERS ',
+              'Liste des Utilisateurs ',
               style: TextStyle(color: Colors.blue),
             ),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => userListPage()),
+              );
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.assignment_outlined),
+            title: Text(
+              'Voyant ',
+              style: TextStyle(color: Colors.blue),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddDashboardLightPage()),
               );
             },
           ),

@@ -41,11 +41,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => DashboardLightsPage(
-                          selectedBrand: "",
-                          selectedModel: '',
-                        )),
+                MaterialPageRoute(builder: (context) => UserPage()),
               );
             },
           ),
