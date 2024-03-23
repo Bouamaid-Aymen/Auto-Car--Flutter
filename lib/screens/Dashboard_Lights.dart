@@ -38,16 +38,32 @@ class _UserPageState extends State<UserPage> {
       body: ListView.builder(
         itemCount: voyants.length,
         itemBuilder: (context, index) {
-String imagePath = voyants[index].image.split('/').last;
-List<String> parts = imagePath.split('\\');
-String imageName = parts.last;
-print(imageName); // Résultat : isi kef.png
-          print(imageName);
-          return ListTile(
-            title: Text(voyants[index].nom),
-            subtitle: Text(voyants[index].description),
-            leading: Image.asset('assets/images/$imageName'),
+          String imagePath = voyants[index].image.split('/').last;
+          List<String> parts = imagePath.split('\\');
+          String imageName = parts.last;
 
+          return Column(
+            children: <Widget>[
+              ListTile(
+                title: Text(
+                  voyants[index].nom,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(voyants[index].description),
+                leading: Container(
+                  width: 50.0,
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage('assets/images/$imageName'),
+                    ),
+                  ),
+                ),
+              ),
+              Divider(),
+            ],
           );
         },
       ),
