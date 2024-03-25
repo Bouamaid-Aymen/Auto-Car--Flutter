@@ -106,14 +106,41 @@ class _userListPageState extends State<userListPage> {
   }
 
   Future<void> deleteById(id) async {
+  bool confirmDelete = await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Confirmation"),
+        content: Text("Êtes-vous sûr de vouloir supprimer cet utilisateur ?"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true); 
+            },
+            child: Text("Oui"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: Text("Non"),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (confirmDelete == true) {
     final isSuccess = await CarService.deleteByuser(id);
     if (isSuccess) {
-      final filtred = items.where((element) => element['id'] != id).toList();
+      final filtered = items.where((element) => element['id'] != id).toList();
       setState(() {
-        items = filtred;
+        items = filtered;
       });
     } else {
-      showErroMessage(context, message: "Deletion failed ");
+      showErroMessage(context, message: "La suppression a échoué");
     }
   }
+}
+
 }
