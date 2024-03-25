@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_app_car/Adminisrateur/screens/Cars.dart';
+import 'package:my_app_car/screens/AddServicePage.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/register.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +80,18 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text('Connection'),
                 ),
-              )
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: navigateToAddServicePage,
+                child: Text(
+                  'Ajouter service',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -122,6 +134,11 @@ class _LoginPageState extends State<LoginPage> {
       print('Failed to send information. Status code: ${response.statusCode}');
       showErrorMessage('Username or Password failed');
     }
+  }
+
+  Future<void> navigateToAddServicePage() async {
+    final route = MaterialPageRoute(builder: (context) => AddServicePage());
+    await Navigator.push(context, route);
   }
 
   void showErrorMessage(String message) {

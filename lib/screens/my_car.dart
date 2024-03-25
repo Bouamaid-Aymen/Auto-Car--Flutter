@@ -222,6 +222,7 @@ class _MyCarState extends State<MyCar> {
       await Navigator.push(context, route);
       showSuccessMessage(context, message: 'Creation Success ☻ ');
     } else {
+      print(response.statusCode);
       print(
           'Failed to send car information. Status code: ${response.statusCode}');
       showErroMessage(context, message: 'Creation failed');
