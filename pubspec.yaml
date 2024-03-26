@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
   shared_preferences: ^2.0.8
 
   # The following adds the Cupertino Icons font to your application.
@@ -47,6 +48,9 @@ dependencies:
   image_picker: ^1.0.7
   chat_gpt_sdk: ^1.0.0
   velocity_x: ^4.1.2
+  google_sign_in: ^6.1.6
+  firebase_auth: ^4.16.0
+  flutter_facebook_auth: ^6.1.1
 
 dev_dependencies:
   flutter_test:

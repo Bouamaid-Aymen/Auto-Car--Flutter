@@ -33,7 +33,20 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Page Utilisateur'),
+        backgroundColor: Colors.red,
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.warning, color: Colors.yellow), 
+              SizedBox(width: 8), 
+              Text(
+                'LES VOYANTS',
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: voyants.length,

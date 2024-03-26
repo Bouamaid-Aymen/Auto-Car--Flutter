@@ -26,8 +26,9 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(
               IconData(0xe1d7, fontFamily: 'MaterialIcons'),
+              color: Color.fromARGB(255, 3, 20, 211),
             ),
-            title: Text('My Car'),
+            title: Text('GARAGE'),
             onTap: () {
               Navigator.push(
                 context,
@@ -37,8 +38,10 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.apps),
-            title: Text('Dashboard Light'),
+            leading: Icon(Icons.warning, color: Colors.yellow),
+            title: Text(
+              'LES VOYANTS',
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -48,9 +51,12 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.emoji_objects),
-            title: Text('Detect Together'),
-             onTap: () {
+            leading: Icon(
+              Icons.chat_bubble,
+              color: Colors.blue,
+            ),
+            title: Text('CHAT BOT'),
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Chatbot()),
@@ -59,14 +65,20 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.location_on),
-            title: Text('Location'),
+            leading: Icon(
+              Icons.location_on,
+              color: Color.fromARGB(255, 1, 107, 8),
+            ),
+            title: Text('CARTE'),
             onTap: () => null,
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.contact_support),
-            title: Text('Setting'),
+            leading: Icon(
+              Icons.settings,
+              color: Colors.grey,
+            ),
+            title: Text('Paramètre'),
             onTap: () {
               Navigator.push(
                 context,
@@ -78,6 +90,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(
               IconData(0xe243, fontFamily: 'MaterialIcons'),
+              color: Colors.red,
             ),
             title: Text('Exit'),
             onTap: () async {

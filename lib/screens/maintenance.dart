@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_app_car/screens/listeMain.dart';
 import 'dart:convert';
 
+import 'package:my_app_car/screens/listeMain.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
 
 class CarMaintenancePage extends StatefulWidget {
@@ -25,8 +25,6 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
   late TextEditingController personneOperationController;
   late TextEditingController modificationsController;
   late TextEditingController autreController;
-
-  List<String> savedChecklists = [];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -64,12 +62,29 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cahier de maintenance de voiture'), actions: [
-        IconButton(
-          icon: Icon(Icons.list),
-          onPressed:(){}
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 8),
+              Text(
+                'Cahier de maintenance ',
+              ),
+              Icon(Icons.build, color: Colors.white)
+            ],
+          ),
         ),
-      ]),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () {
+              navigateTo(widget.carId);
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -108,10 +123,9 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
                 SizedBox(height: 20),
-                Text(
-                  'Contrôle technique',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                Text('Contrôle technique',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    selectionColor: Colors.green),
                 TextFormField(
                   controller: constatationsController,
                   decoration: InputDecoration(
@@ -221,10 +235,10 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
       showErroMessage(context, message: 'Failed');
     }
   }
- Future<void> navigateTo() async {
-    final route = MaterialPageRoute(builder: (context) => MaintenanceListPage());
+
+  Future<void> navigateTo(String carId) async {
+    final route = MaterialPageRoute(
+        builder: (context) => MaintenanceListPage(carId: widget.carId));
     await Navigator.push(context, route);
-    
   }
-  
 }

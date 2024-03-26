@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:my_app_car/Adminisrateur/screens/Cars.dart';
 import 'package:my_app_car/Adminisrateur/screens/listeuser.dart';
 import 'package:my_app_car/screens/AddServicePage.dart';
 import 'package:my_app_car/screens/Car_list.dart';
@@ -48,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                   prefixIcon: Icon(Icons.person),
                 ),
                 onChanged: (value) {
-                  // Appliquer un filtre à value si nécessaire
+               
                 },
               ),
               SizedBox(height: 10),
@@ -71,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 keyboardType: TextInputType.text,
                 obscureText: obscureText,
                 onChanged: (value) {
-                  // Appliquer un filtre à value si nécessaire
+                
                 },
               ),
               SizedBox(height: 20),

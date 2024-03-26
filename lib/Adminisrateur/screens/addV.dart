@@ -153,12 +153,11 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
     final uri = Uri.parse('http://localhost:3000/car/$id/voyant');
     final response = await http.delete(uri);
     if (response.statusCode == 200) {
-      // Voyant supprimé avec succès
-      // Actualiser la liste des voyants après la suppression
+  
       fetchVoyants();
       showSuccessMessage(context, message: 'Voyant supprimé avec succès');
     } else {
-      // Échec de la suppression du voyant
+      
       print(response.body);
       showErroMessage(context, message: 'Échec de la suppression du voyant');
     }

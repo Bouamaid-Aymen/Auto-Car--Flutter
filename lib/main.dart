@@ -8,7 +8,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key); // Correction de la syntaxe du constructeur
+  const MyApp({Key? key})
+      : super(key: key); // Correction de la syntaxe du constructeur
 
   @override
   Widget build(BuildContext context) {

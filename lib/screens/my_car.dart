@@ -55,8 +55,18 @@ class _MyCarState extends State<MyCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: (Colors.blue),
-        title: Text(isEdit ? 'Edit Car' : 'My Car'),
+        backgroundColor: Color.fromARGB(255, 3, 20, 211),
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(isEdit ? 'MODIFIER VOITURE' : 'GARAGE '),
+              Icon(
+                Icons.garage,
+              ),
+            ],
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -72,7 +82,7 @@ class _MyCarState extends State<MyCar> {
                   padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
                     underline: Container(),
-                    hint: Text('Select Brand'),
+                    hint: Text('Sélectionnez la marque'),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     isDense: true,
                     isExpanded: true,
@@ -105,7 +115,7 @@ class _MyCarState extends State<MyCar> {
                   padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
                     underline: Container(),
-                    hint: Text('Select Model'),
+                    hint: Text('Sélectionnez le modèle'),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     isDense: true,
                     isExpanded: true,
@@ -136,7 +146,7 @@ class _MyCarState extends State<MyCar> {
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
-                labelText: 'Enter age of the vehicle',
+                labelText: 'Entrez l`âge du véhicule',
                 prefixIcon: Icon(Icons.calendar_today),
               ),
             ),
@@ -151,7 +161,7 @@ class _MyCarState extends State<MyCar> {
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
-                labelText: 'Enter kilometers',
+                labelText: 'Entrez les kilomètres',
                 prefixIcon: Icon(Icons.directions_car),
               ),
             ),
@@ -174,7 +184,7 @@ class _MyCarState extends State<MyCar> {
               },
               readOnly: true,
               decoration: InputDecoration(
-                labelText: 'Enter last oil change date',
+                labelText: 'Entrez la date de la dernière vidange d`huile',
                 prefixIcon: Icon(Icons.event),
               ),
             ),
@@ -183,13 +193,19 @@ class _MyCarState extends State<MyCar> {
               onPressed: isEdit
                   ? updateData
                   : () => sendCarInformation(
-                      selectedBrand,
-                      selectedModel,
-                      age,
-                      km,
-                      lastOilChangeDate
-                          .toString()), //si clicker sursendCArInforma aller page CarListPage
-              child: Text(isEdit ? 'Update' : 'SAVE'),
+                        selectedBrand,
+                        selectedModel,
+                        age,
+                        km,
+                        lastOilChangeDate.toString(),
+                      ),
+              child: Text(isEdit ? 'Enregistrer' : 'Enregistrer'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(
+                      255, 3, 20, 211), // Couleur bleue personnalisée
+                ),
+              ),
             ),
           ],
         ),
