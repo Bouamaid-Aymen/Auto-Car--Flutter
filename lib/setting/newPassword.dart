@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_app_car/screens/Car_list.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -12,6 +16,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
+  TextEditingController pasNController = TextEditingController();
+  TextEditingController pasOController = TextEditingController();
   String username = TokenStorage.getUsername();
   String email = TokenStorage.getEmail();
 
@@ -66,6 +72,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             Text('Old Password'),
             SizedBox(height: 10),
             TextFormField(
+              controller: pasOController,
               obscureText: _obscureOldPassword,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -81,6 +88,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             Text('New Password'),
             SizedBox(height: 10),
             TextFormField(
+              controller: pasNController,
               obscureText: _obscureNewPassword,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -111,7 +119,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Implement password change logic here
+                  upPassword(email);
                 },
                 child: Text('Change Password'),
               ),
@@ -121,4 +129,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       ),
     );
   }
+
+  Future<void> upPassword(String email) async {
+    final passwordN = pasNController.text;
+    final passwordO = pasOController.text;
+    final body = {
+      "email": email,
+      "oldPassword": passwordO,
+      "newPassword": passwordN
+    };
+    const url = "http://localhost:3000/users/update-password";
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 201) {
+      Get.snackbar('succès', 'Modifier password ',backgroundColor: Colors.green,
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Errore', ' Password failed',backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
 }
+

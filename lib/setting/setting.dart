@@ -36,9 +36,12 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Setting',
-          style: TextStyle(fontSize: 22),
+        backgroundColor: const Color.fromARGB(207, 158, 158, 158),
+        title: Center(
+          child: Text(
+            'PARAMÈTRE',
+            style: TextStyle(fontSize: 22),
+          ),
         ),
         leading: IconButton(
           onPressed: () {
