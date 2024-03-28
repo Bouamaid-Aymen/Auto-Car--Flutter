@@ -39,8 +39,7 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
         backgroundColor: Color.fromARGB(255, 60, 0, 129),
         title: Center(child: Text('Liste des maintenances')),
       ),
-      body: 
-      maintenanceList.isEmpty
+      body: maintenanceList.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: maintenanceList.length,
@@ -53,18 +52,13 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
                         SizedBox(height: 8),
                         Center(
                           child: Text(
-                            'Maintenance',
+                            'Date: ${maintenance["date"]} - Kilomètres: ${maintenance["km"]}',
                             style: TextStyle(
                               color: Colors.green,
                             ),
                           ),
                         ),
                       ],
-                    ),
-                    subtitle: Center(
-                      child: Text(
-                        'Date: ${maintenance["date"]} - Kilomètres: ${maintenance["km"]}',
-                      ),
                     ),
                     onTap: () {
                       Navigator.push(
