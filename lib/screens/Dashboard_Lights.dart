@@ -9,6 +9,8 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   List<Voyant> voyants = [];
+  List<Voyant> filteredVoyants = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -23,6 +25,7 @@ class _UserPageState extends State<UserPage> {
       final List<dynamic> responseData = jsonDecode(response.body);
       setState(() {
         voyants = responseData.map((data) => Voyant.fromJson(data)).toList();
+        filteredVoyants = voyants;
       });
     } else {
       throw Exception('Failed to load voyants');
@@ -38,8 +41,8 @@ class _UserPageState extends State<UserPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.warning, color: Colors.yellow), 
-              SizedBox(width: 8), 
+              Icon(Icons.warning, color: Colors.yellow),
+              SizedBox(width: 8),
               Text(
                 'LES VOYANTS',
                 style: TextStyle(fontSize: 20),
@@ -48,37 +51,62 @@ class _UserPageState extends State<UserPage> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: voyants.length,
-        itemBuilder: (context, index) {
-          String imagePath = voyants[index].image.split('/').last;
-          List<String> parts = imagePath.split('\\');
-          String imageName = parts.last;
-
-          return Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  voyants[index].nom,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(voyants[index].description),
-                leading: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/$imageName'),
-                    ),
-                  ),
-                ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Chercher par nom',
+                prefixIcon: Icon(Icons.search),
               ),
-              Divider(),
-            ],
-          );
-        },
+              onChanged: (value) {
+                setState(() {
+                  filteredVoyants = voyants
+                      .where((voyant) => voyant.nom
+                          .toLowerCase()
+                          .contains(value.toLowerCase()))
+                      .toList();
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredVoyants.length,
+              itemBuilder: (context, index) {
+                String imagePath = filteredVoyants[index].image.split('/').last;
+                List<String> parts = imagePath.split('\\');
+                String imageName = parts.last;
+
+                return Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(
+                        filteredVoyants[index].nom,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(filteredVoyants[index].description),
+                      leading: Container(
+                        width: 50.0,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/images/$imageName'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
