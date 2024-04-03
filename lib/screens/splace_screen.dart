@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:my_app_car/screens/login_page.dart';
+import 'package:my_app_car/screens/register.dart';
+import 'AddServicePage.dart';
 
-
-class Splace_Screen extends StatelessWidget {
-  const Splace_Screen({super.key});
+class Splash_Screen extends StatelessWidget {
+  const Splash_Screen({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey, // Couleur de fond blanche
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
@@ -61,8 +64,49 @@ class Splace_Screen extends StatelessWidget {
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            
-            
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child:
+                    Text('Se connecter', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // couleur de fond bleue
+                ),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  );
+                },
+                child: Text('S`inscrire', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, // couleur de fond verte
+                ),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddServicePage()),
+                  );
+                },
+                child: Text('Aajouter service',
+                    style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(
+                      228, 153, 61, 61), // couleur de fond orange
+                ),
+              ),
+            ],
           )),
         ]),
       ),

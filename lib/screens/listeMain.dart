@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:my_app_car/screens/maintenance.dart';
+import 'package:my_app_car/utils/snackbar_helper.dart';
+
 class MaintenanceListPage extends StatefulWidget {
   final String carId;
 
@@ -32,46 +35,134 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
     }
   }
 
+  Future<void> deleteMaintenance(int id) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content:
+              Text('Êtes-vous sûr de vouloir supprimer cette maintenance ?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final uri =
+                    Uri.parse('http://localhost:3000/voiture/$id/maitenance');
+                final response = await http.delete(uri);
+                if (response.statusCode == 200) {
+                  fetchData();
+                  showSuccessMessage(context,
+                      message: 'Voyant supprimé avec succès');
+                } else {
+                  print(response.body);
+                  showErroMessage(context,
+                      message: 'Échec de la suppression du voyant');
+                }
+              },
+              child: Text('Confirmer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 60, 0, 129),
         title: Center(child: Text('Liste des maintenances')),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CarMaintenancePage(carId: widget.carId)),
+              );
+            },
+            icon: Tooltip(
+              message: 'Ajouter maintenance',
+              child: Icon(Icons.add),
+            ),
+          ),
+        ],
       ),
       body: maintenanceList.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: maintenanceList.length,
-              itemBuilder: (context, index) {
-                final maintenance = maintenanceList[index];
-                return Card(
-                  child: ListTile(
-                    title: Column(
-                      children: [
-                        SizedBox(height: 8),
-                        Center(
-                          child: Text(
-                            'Date: ${maintenance["date"]} - Kilomètres: ${maintenance["km"]}',
-                            style: TextStyle(
-                              color: Colors.green,
+          : RefreshIndicator(
+              onRefresh: fetchData,
+              child: ListView.builder(
+                itemCount: maintenanceList.length,
+                itemBuilder: (context, index) {
+                  final maintenance = maintenanceList[index];
+                  final int id = maintenance['id'];
+                  return Card(
+                    child: ListTile(
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          deleteMaintenance(id);
+                        },
+                      ),
+                      title: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Center(
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Date : ',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  TextSpan(
+                                    text: '${maintenance["date"]}',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  TextSpan(
+                                    text: ' - Kilomètres: ',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  TextSpan(
+                                    text: '${maintenance["km"]}',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MaintenanceDetailsPage(
+                                maintenance: maintenance),
+                          ),
+                        );
+                      },
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MaintenanceDetailsPage(maintenance: maintenance),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
     );
   }
@@ -92,10 +183,7 @@ class MaintenanceDetailsPage extends StatelessWidget {
       body: SizedBox.expand(
         child: Container(
           padding: EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+          decoration: BoxDecoration(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -130,14 +218,14 @@ class MaintenanceDetailsPage extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.blue,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              color: Colors.blue,
+              color: Colors.white,
             ),
           ),
         ],

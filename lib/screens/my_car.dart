@@ -55,7 +55,7 @@ class _MyCarState extends State<MyCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 3, 20, 211),
+        backgroundColor: Colors.blue,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -201,10 +201,7 @@ class _MyCarState extends State<MyCar> {
                       ),
               child: Text(isEdit ? 'Enregistrer' : 'Enregistrer'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(
-                      255, 3, 20, 211), // Couleur bleue personnalisée
-                ),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
             ),
           ],

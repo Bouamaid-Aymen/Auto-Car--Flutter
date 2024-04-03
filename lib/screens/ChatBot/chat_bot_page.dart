@@ -30,16 +30,21 @@ class _ChatBotState extends State<ChatBot> {
         backgroundColor: Colors.blue,
         title: const Text("Chat Bot"),
       ),
-      body: DashChat(
+      body: Container(
+      color: Colors.white, // Set the background color to white
+      child: DashChat(
         currentUser: widget._currentUser,
         messageOptions: const MessageOptions(
-            currentUserContainerColor: Colors.black, textColor: Colors.white),
+          currentUserContainerColor: Colors.blue,
+          textColor: Colors.white,
+        ),
         onSend: (ChatMessage m) {
           getChatResponse(m);
         },
         messages: _messages,
       ),
-    );
+    ),
+  );
   }
 
   Future<void> getChatResponse(ChatMessage m) async {
@@ -50,7 +55,7 @@ class _ChatBotState extends State<ChatBot> {
       
       List<Messages> _messagesHistory = _messages.reversed.map((m) {
         if (m.user == widget._currentUser) {
-          return Messages(role: Role.user, content: m.text);
+          return Messages(role: Role.user, content: m.text,);
         } else {
           return Messages(role: Role.assistant, content: m.text);
         }
@@ -78,7 +83,7 @@ class _ChatBotState extends State<ChatBot> {
       }
     } catch (e) {
       print('Erreur de requête : $e');
-      // Gérer l'erreur 429 ici, par exemple en affichant un message à l'utilisateur
+
     }
   }
 }

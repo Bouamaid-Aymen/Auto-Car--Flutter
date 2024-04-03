@@ -22,7 +22,19 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('SINGUP')),
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text(
+            'S`INSCRIRE',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(40),
@@ -33,22 +45,25 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  hintText: 'EMAIL',
-                  prefixIcon: Icon(Icons.person),
+                  hintText: 'E-MAIL',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
               ),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'USERNAME',
-                  prefixIcon: Icon(Icons.person),
+                  hintText: 'NOM D`UTILISATEUR',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
               ),
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
-                  hintText: 'PASSWORD',
-                  prefixIcon: Icon(Icons.lock),
+                  hintText: 'MOT DE PASSE',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   suffixIcon: IconButton(
                     icon: Icon(
                       obscureText ? Icons.visibility : Icons.visibility_off,
@@ -67,6 +82,9 @@ class _RegisterPageState extends State<RegisterPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: registerApi,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text('SINGUP'),
@@ -101,7 +119,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  //API Response Reaction
   void showErrorMessage(String message) {
     final snackBar = SnackBar(
       content: Center(

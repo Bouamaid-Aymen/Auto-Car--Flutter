@@ -27,47 +27,62 @@ class AddServicePage extends StatelessWidget {
               controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: Icon(Icons.email, color: Colors.blue),
+                labelStyle: TextStyle(color: Colors.white),
               ),
             ),
+        
             TextField(
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Nom',
-                prefixIcon: Icon(Icons.person),
+                prefixIcon: Icon(Icons.person, color: Colors.blue),
+                labelStyle: TextStyle(color: Colors.white),
               ),
             ),
+            
             TextField(
               controller: phoneController,
               decoration: InputDecoration(
                 labelText: 'Téléphone',
-                prefixIcon: Icon(Icons.phone),
+                prefixIcon: Icon(Icons.phone, color: Colors.blue),
+                labelStyle: TextStyle(color: Colors.white),
               ),
               keyboardType: TextInputType.phone,
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
             ),
+           
             TextField(
               controller: addressController,
               decoration: InputDecoration(
                 labelText: 'Adresse',
-                prefixIcon: Icon(Icons.location_on),
+                prefixIcon: Icon(Icons.location_on, color: Colors.blue),
+                labelStyle: TextStyle(color: Colors.white),
               ),
             ),
+           
             TextField(
               controller: serviceNameController,
               decoration: InputDecoration(
                 labelText: 'Nom du service',
-                prefixIcon: Icon(Icons.room_service),
+                prefixIcon: Icon(Icons.room_service, color: Colors.blue),
+                labelStyle: TextStyle(color: Colors.white),
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: addService,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('Ajouter le service'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(1),
+                backgroundColor: Colors.blue,
+              ),
+              child: Text(
+                'Ajouter le service',
+                style: TextStyle(
+                    color:
+                        Colors.white),
               ),
             ),
           ],

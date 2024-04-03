@@ -36,15 +36,15 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.warning, color: Colors.yellow),
-              SizedBox(width: 8),
+            
+            
               Text(
-                'LES VOYANTS',
+                'Liste des voyants',
                 style: TextStyle(fontSize: 20),
               ),
             ],

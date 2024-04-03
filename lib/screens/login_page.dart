@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_app_car/Adminisrateur/screens/listeuser.dart';
-import 'package:my_app_car/screens/AddServicePage.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/register.dart';
 import 'package:http/http.dart' as http;
@@ -24,16 +23,20 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Center(child: Text('Login')),
-      ),
-      floatingActionButton: SizedBox(
-        width: 200,
-        child: FloatingActionButton.extended(
-          onPressed: navigateAddPage,
-          label: Text('SINGUP'),
-        ),
-      ),
+  title: Center(
+    child: Text(
+      'SE CONNECTER',
+      style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
+    ),
+  ),
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    },
+  ),
+),
+
       body: Padding(
         padding: const EdgeInsets.all(40),
         child: Center(
@@ -43,19 +46,19 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'USERNAME',
-                  prefixIcon: Icon(Icons.person),
+                  hintText: 'NOM D`UTILISATEUR',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
-                onChanged: (value) {
-               
-                },
+                onChanged: (value) {},
               ),
               SizedBox(height: 10),
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
-                  hintText: 'PASSWORD',
-                  prefixIcon: Icon(Icons.lock),
+                  hintText: 'MOT DE PASSE',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   suffixIcon: IconButton(
                     icon: Icon(
                       obscureText ? Icons.visibility : Icons.visibility_off,
@@ -69,27 +72,29 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 keyboardType: TextInputType.text,
                 obscureText: obscureText,
-                onChanged: (value) {
-                
-                },
+                onChanged: (value) {},
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => LoginApi(),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text('Connection'),
+                  child: Text(
+                    'SE CONNECTER',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
               GestureDetector(
                 onTap: navigateToAddServicePage,
                 child: Text(
-                  'Ajouter service',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
+                  'S`INSCRIRE',
+                  style: TextStyle(color: Colors.green),
                 ),
               ),
             ],
@@ -137,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> navigateToAddServicePage() async {
-    final route = MaterialPageRoute(builder: (context) => AddServicePage());
+    final route = MaterialPageRoute(builder: (context) => RegisterPage());
     await Navigator.push(context, route);
   }
 

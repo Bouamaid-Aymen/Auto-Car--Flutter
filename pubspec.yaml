@@ -52,6 +52,8 @@ dependencies:
   firebase_auth: ^4.16.0
   flutter_facebook_auth: ^6.1.1
   dash_chat_2: ^0.0.20
+  flutter_localization: ^0.2.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

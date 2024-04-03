@@ -8,8 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key})
-      : super(key: key); // Correction de la syntaxe du constructeur
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +16,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Auto Car',
-      theme: ThemeData.dark(),
-      home: const Splace_Screen(),
+      theme: ThemeData.dark().copyWith(
+        textTheme: ThemeData.dark().textTheme.apply(
+              bodyColor: Colors.white, // Couleur de texte blanc
+              displayColor: Color.fromARGB(255, 0, 95, 237), // Couleur de texte blanc pour les gros titres
+            ),
+      ),
+      home: Splash_Screen(),
     );
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:my_app_car/screens/listeMain.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
 
 class CarMaintenancePage extends StatefulWidget {
@@ -27,6 +25,7 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
   late TextEditingController autreController;
 
   final _formKey = GlobalKey<FormState>();
+  bool isDateEditable = false;
 
   @override
   void initState() {
@@ -76,14 +75,6 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
             ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.list),
-            onPressed: () {
-              navigateTo(widget.carId);
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -94,12 +85,17 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
+                  onTap: () {
+                    setState(() {
+                      isDateEditable = true;
+                    });
+                  },
                   onChanged: (value) {},
                   controller: dateController,
                   decoration: InputDecoration(
                     labelText: 'Date (JJ-MM-AAAA)',
                   ),
-                  readOnly: true,
+                  readOnly: !isDateEditable,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ce champ est obligatoire';
@@ -123,9 +119,13 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
                 SizedBox(height: 20),
-                Text('Contrôle technique',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    selectionColor: Colors.green),
+                Text(
+                  'Liste des Contrôles',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextFormField(
                   controller: constatationsController,
                   decoration: InputDecoration(
@@ -178,7 +178,10 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
                       saveData();
                     }
                   },
-                  child: Text('Enregistrer'),
+                  child: Text(
+                    'Enregistrer',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -234,11 +237,5 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
 
       showErroMessage(context, message: 'Failed');
     }
-  }
-
-  Future<void> navigateTo(String carId) async {
-    final route = MaterialPageRoute(
-        builder: (context) => MaintenanceListPage(carId: widget.carId));
-    await Navigator.push(context, route);
   }
 }
