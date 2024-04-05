@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -37,6 +38,7 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchVoyants();
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Dashboard Light'),
@@ -49,15 +51,16 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
             Text(
               'AJOUTER UN VOYANT',
               style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
             Divider(),
             TextField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: 'Name',
+                labelText: 'Nom',
               ),
             ),
             SizedBox(height: 20.0),
@@ -70,22 +73,31 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: getImage,
-              child: Text('Select Image'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+              ),
+              child: Text('Sélectionnez une image'),
             ),
             SizedBox(height: 20.0),
             _image == null ? Text('No image selected.') : Text(_image!.path),
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: addV,
-              child: Text('Add Dashboard Light'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+              ),
+              child: Text('Ajouter voyant'),
             ),
             SizedBox(height: 20.0),
             Text(
               'LISTE DES VOYANTS',
               style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
             Divider(),
             Expanded(
@@ -94,14 +106,60 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(voyants[index].nom),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
+                    subtitle: TextButton.icon(
                       onPressed: () {
-                        deleteVoyant(voyants[index].id);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                'Description',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              content: Text(voyants[index].description),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Fermer'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
+                      icon: Icon(Icons.info),
+                      label: Text('Description'),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.orange,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditVoyantPage(voyants[index]),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            deleteVoyant(voyants[index].id);
+                          },
+                        ),
+                      ],
                     ),
                     onTap: () {},
                   );
@@ -128,7 +186,7 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
     print(response.body);
     if (response.statusCode == 201) {
       showSuccessMessage(context, message: "Création validée");
-      // Actualiser la liste des voyants après l'ajout
+
       fetchVoyants();
     } else {
       print(response.statusCode);
@@ -150,16 +208,40 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
   }
 
   Future<void> deleteVoyant(int id) async {
-    final uri = Uri.parse('http://localhost:3000/car/$id/voyant');
-    final response = await http.delete(uri);
-    if (response.statusCode == 200) {
-  
-      fetchVoyants();
-      showSuccessMessage(context, message: 'Voyant supprimé avec succès');
-    } else {
-      
-      print(response.body);
-      showErroMessage(context, message: 'Échec de la suppression du voyant');
+    final confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Voulez-vous vraiment supprimer ce voyant ?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('Non'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text('Oui'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      final uri = Uri.parse('http://localhost:3000/car/$id/voyant');
+      final response = await http.delete(uri);
+      if (response.statusCode == 200) {
+        fetchVoyants();
+        showSuccessMessage(context, message: 'Voyant supprimé avec succès');
+      } else {
+        print(response.body);
+        showErroMessage(context, message: 'Échec de la suppression du voyant');
+      }
     }
   }
 }
@@ -184,5 +266,90 @@ class Voyant {
       description: json['description'],
       image: json['image'],
     );
+  }
+}
+
+class EditVoyantPage extends StatefulWidget {
+  final Voyant voyant;
+
+  EditVoyantPage(this.voyant);
+
+  @override
+  _EditVoyantPageState createState() => _EditVoyantPageState();
+}
+
+class _EditVoyantPageState extends State<EditVoyantPage> {
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.voyant.nom);
+    descriptionController =
+        TextEditingController(text: widget.voyant.description);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Voyant'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Nom du voyant',
+              ),
+            ),
+            SizedBox(height: 20.0),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+              ),
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                modifierV(widget.voyant.id);
+              },
+              child: Text('Modifier Voyant'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> modifierV(int id) async {
+    final nom = nameController.text;
+    final description = descriptionController.text;
+    final body = {"nom": nom, "description": description};
+    final url = "http://localhost:3000/car/$id/voyant";
+    final uri = Uri.parse(url);
+    final response = await http.patch(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      showSuccessMessage(context, message: "Modification validée");
+    } else {
+      print(response.statusCode);
+      showErroMessage(context, message: "Échec de la modification");
+    }
   }
 }

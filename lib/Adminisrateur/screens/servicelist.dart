@@ -52,6 +52,17 @@ class _ListeServiceState extends State<ListeService> {
     }
 
   }
+  Future<void> verifyServiceN(int id) async {
+    final url = Uri.parse('http://localhost:3000/car/$id/serviceN');
+    final response = await http.patch(url);
+
+    if (response.statusCode == 200) {
+      fetchServices();
+    } else {
+      print('Failed to delete service');
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +116,22 @@ class _ListeServiceState extends State<ListeService> {
                               color: Colors.green,
                             ),
                             SizedBox(width: 8),
-                            Text('Vérifier',
+                            Text('OUI',
                                 style: TextStyle(color: Colors.green)),
+                          ],
+                        ),
+                      ),
+                       TextButton(
+                        onPressed: () => verifyServiceN(service['id']),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check,
+                              color: Colors.redAccent,
+                            ),
+                            SizedBox(width: 8),
+                            Text('NON',
+                                style: TextStyle(color: Colors.redAccent)),
                           ],
                         ),
                       ),

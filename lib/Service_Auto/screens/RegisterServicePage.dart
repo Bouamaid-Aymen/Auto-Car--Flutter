@@ -1,43 +1,43 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_app_car/Adminisrateur/screens/listeuser.dart';
-import 'package:my_app_car/Service_Auto/screens/home_service.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/register.dart';
 import 'package:http/http.dart' as http;
 
-class LoginPage extends StatefulWidget {
+class RegisterServicePage extends StatefulWidget {
   final Map? todo;
-  const LoginPage({Key? key, this.todo});
+  const RegisterServicePage({Key? key, this.todo});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterServicePage> createState() => _RegisterServicePageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterServicePageState extends State<RegisterServicePage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isEdit = false;
   bool obscureText = true;
+  bool hasService = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Center(
-    child: Text(
-      'SE CONNECTER',
-      style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
-    ),
-  ),
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    },
-  ),
-),
-
+        title: Center(
+          child: Text(
+            'SE CONNECTER',
+            style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(40),
         child: Center(
@@ -47,9 +47,20 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'NOM D`UTILISATEUR',
+                  hintText: 'Nom de utilisateur ',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.person, color: Colors.blue),
+                ),
+                onChanged: (value) {},
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  hintText: 'Nom de service',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.business,
+                      color: Colors.blue),
                 ),
                 onChanged: (value) {},
               ),
@@ -57,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
-                  hintText: 'MOT DE PASSE',
+                  hintText: 'mot de passe',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   suffixIcon: IconButton(
@@ -75,9 +86,28 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: obscureText,
                 onChanged: (value) {},
               ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: hasService,
+                    onChanged: (value) {
+                      setState(() {
+                        hasService = value!;
+                      });
+                    },
+                  ),
+                  Text('J\'ai un service *',
+                      style: TextStyle(
+                          color: hasService ? Colors.green : Colors.red)),
+                ],
+              ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () => LoginApi(),
+                onPressed: hasService
+                    ? () => LoginApi()
+                    : null, // Disable button if hasService is false
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
@@ -90,24 +120,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              GestureDetector(
-                onTap: navigateToAddServicePage,
-                child: Text(
-                  'S`INSCRIRE',
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future<void> navigateAddPage() async {
-    final route = MaterialPageRoute(builder: (context) => RegisterPage());
-    await Navigator.push(context, route);
   }
 
   Future<void> LoginApi() async {
@@ -121,7 +138,8 @@ class _LoginPageState extends State<LoginPage> {
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 201) {
-      showSuccessMessage('Welcom ☻ ');
+      Get.snackbar('Succès', 'Bienvenue ☻',
+          backgroundColor: Colors.green, snackPosition: SnackPosition.BOTTOM);
       print('Information sent successfully!');
       final token = jsonDecode(response.body)["acces token"];
       final userRole = jsonDecode(response.body)["role"];
@@ -129,43 +147,14 @@ class _LoginPageState extends State<LoginPage> {
 
       TokenStorage.storeToken(token, username, email);
 
-      if (userRole == "USER") {
+      if (userRole == "SERVICE" && hasService) {
         final route = MaterialPageRoute(builder: (context) => CarListPage());
         await Navigator.push(context, route);
-      } else if (userRole == "SERVICE") {
-        final route = MaterialPageRoute(builder: (context) => ServiceListPage());
-        await Navigator.push(context, route);
-      } 
-      else {
-        final route = MaterialPageRoute(builder: (context) => userListPage());
-        await Navigator.push(context, route);
+      } else {
+        Get.snackbar('Échoué',
+            'Échec de l`ajout du service Compte attend la verification ',
+            backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
       }
-    } else {
-      print('Failed to send information. Status code: ${response.statusCode}');
-      showErrorMessage('Username or Password failed');
     }
-  }
-
-  Future<void> navigateToAddServicePage() async {
-    final route = MaterialPageRoute(builder: (context) => RegisterPage());
-    await Navigator.push(context, route);
-  }
-
-  void showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content:
-          Center(child: Text(message, style: TextStyle(color: Colors.white))),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(
-      content:
-          Center(child: Text(message, style: TextStyle(color: Colors.white))),
-      backgroundColor: Colors.green,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

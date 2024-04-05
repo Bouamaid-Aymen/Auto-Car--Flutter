@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/register.dart';
-import 'AddServicePage.dart';
+import '../Service_Auto/screens/AddServicePage.dart';
 
 class Splash_Screen extends StatelessWidget {
   const Splash_Screen({Key? key});
@@ -99,7 +99,7 @@ class Splash_Screen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddServicePage()),
                   );
                 },
-                child: Text('Aajouter service',
+                child: Text('Ajouter une service',
                     style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(
