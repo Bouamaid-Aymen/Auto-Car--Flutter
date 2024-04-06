@@ -24,20 +24,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Center(
-    child: Text(
-      'SE CONNECTER',
-      style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
-    ),
-  ),
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    },
-  ),
-),
-
+        title: Center(
+          child: Text(
+            'SE CONNECTER',
+            style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(40),
         child: Center(
@@ -133,10 +132,10 @@ class _LoginPageState extends State<LoginPage> {
         final route = MaterialPageRoute(builder: (context) => CarListPage());
         await Navigator.push(context, route);
       } else if (userRole == "SERVICE") {
-        final route = MaterialPageRoute(builder: (context) => ServiceListPage());
+        final route =
+            MaterialPageRoute(builder: (context) => ServiceListPage());
         await Navigator.push(context, route);
-      } 
-      else {
+      } else {
         final route = MaterialPageRoute(builder: (context) => userListPage());
         await Navigator.push(context, route);
       }

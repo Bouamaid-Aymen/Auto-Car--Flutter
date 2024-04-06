@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get/get.dart';
 import 'package:my_app_car/controller/splace_controller.dart';
+import 'package:my_app_car/screens/ChatBot/const.dart';
 import 'package:my_app_car/screens/splace_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Replace GEMINI_API_KEY with your actual API key
+  Gemini.init(apiKey: GEMINI_API_KEY);
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,12 +21,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Auto Car',
-      theme: ThemeData.dark().copyWith(
-        textTheme: ThemeData.dark().textTheme.apply(
-              bodyColor: Colors.white, // Couleur de texte blanc
-              displayColor: Color.fromARGB(255, 0, 95, 237), // Couleur de texte blanc pour les gros titres
-            ),
-      ),
+       theme: ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Colors.blue,
+    hintColor: Colors.blueAccent,
+    // Autres configurations de thème si nécessaire
+  ),
       home: Splash_Screen(),
     );
   }

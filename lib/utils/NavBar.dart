@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/Car_list.dart';
-import 'package:my_app_car/screens/ChatBot/chat_bot_page.dart';
+import 'package:my_app_car/screens/ChatBot/searching.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/my_car.dart';
@@ -66,7 +66,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => ChatbotCar()),
               );
             },
           ),

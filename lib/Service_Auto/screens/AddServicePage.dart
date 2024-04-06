@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_app_car/Service_Auto/screens/RegisterServicePage.dart';
-import 'package:my_app_car/screens/register.dart';
 
 class AddServicePage extends StatefulWidget {
   @override
