@@ -17,19 +17,20 @@ class _ChatbotCar extends State<ChatbotCar> {
   ChatUser geminiUser = ChatUser(id: "1", firstName: "Assistant");
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: const Color.fromARGB(143, 158, 158, 158),
         centerTitle: true,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Auto ',
               style: TextStyle(
                 color: Colors.blue,
-                fontSize: 15,
+                fontSize: 23,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,7 +38,7 @@ class _ChatbotCar extends State<ChatbotCar> {
               'Car',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: 23,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -45,19 +46,45 @@ class _ChatbotCar extends State<ChatbotCar> {
         ),
       ),
       body: Container(
-  decoration: BoxDecoration(
-    color: Colors.blueGrey, // Changer en vert
-    
-  ),
-  child: _buildUI(),
-),
+        decoration: BoxDecoration(
+          color: Colors.transparent, // Changer en vert
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
 
+                child: Text(
+                  '          ChatBot',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(241, 25, 71, 26),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              
+            ),
+            Expanded(
+              child: _buildUI(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildUI() {
     return DashChat(
-        currentUser: currentUser, onSend: _sendMessage, messages: messages);
+      currentUser: currentUser,
+      onSend: _sendMessage,
+      messages: messages,
+      inputOptions: InputOptions(
+        inputTextStyle:
+            TextStyle(color: Colors.black), // Couleur du texte saisi
+      ),
+    );
   }
 
   void _sendMessage(ChatMessage chatMessage) {

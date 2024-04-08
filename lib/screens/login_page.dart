@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
         title: Center(
           child: Text(
             'SE CONNECTER',
-            style: TextStyle(color: Color.fromARGB(255, 112, 183, 242)),
+            style: TextStyle(color: Colors.white),
           ),
         ),
         leading: IconButton(
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(40),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +141,8 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else {
       print('Failed to send information. Status code: ${response.statusCode}');
-      showErrorMessage('Username or Password failed');
+      final message = jsonDecode(response.body)["message"];
+      showErrorMessage('ERROR: ${message}');
     }
   }
 

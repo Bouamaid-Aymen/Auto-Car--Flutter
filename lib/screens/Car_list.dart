@@ -62,21 +62,28 @@ class _CarListPageState extends State<CarListPage> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        backgroundColor: (const Color.fromARGB(0, 33, 149, 243)),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
-        ],
-        title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(width: 8),
-              Text(
-                'Liste des voitures ',
+        backgroundColor: const Color.fromARGB(143, 158, 158, 158),
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Auto ',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 23,
+                fontWeight: FontWeight.bold,
               ),
-              Icon(Icons.content_paste_rounded, color: Colors.white)
-            ],
-          ),
+            ),
+            Text(
+              'Car',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 23,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
       body: Visibility(
@@ -86,93 +93,112 @@ class _CarListPageState extends State<CarListPage> {
           onRefresh: fetchCar,
           child: Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/garage.avif'),
-                fit: BoxFit.cover,
-              ),
+              color: Colors.transparent, // Couleur de fond
+             
             ),
-            child: ListView.builder(
-              itemCount: items.length,
-              padding: EdgeInsets.all(12),
-              itemBuilder: (context, index) {
-                final item = items[index] as Map;
-                final id = '${item['Id']}';
-
-                return Card(
-                  child: ListTile(
-                    leading: Icon(Icons.directions_car, color: Colors.blue),
-                    title: Text(
-                      '${item['brand']} ${item['model']}',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    subtitle: Text(
-                      'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}',
-                    ),
-                    trailing: PopupMenuButton(
-                      onSelected: (value) {
-                        if (value == 'edit') {
-                          navigateToEditCarPage(item);
-                        } else if (value == 'delete') {
-                          deleteById(id);
-                        }
-                      },
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit, color: Colors.blue),
-                                SizedBox(width: 8),
-                                Text(
-                                  'MODIFIER',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              ],
-                            ),
-                            value: 'edit',
-                          ),
-                          PopupMenuItem(
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red),
-                                SizedBox(width: 8),
-                                Text(
-                                  'SUPPRIMER',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                            value: 'delete',
-                          ),
-                          PopupMenuItem(
-                            child: Row(
-                              children: [
-                                Icon(Icons.build, color: Colors.green),
-                                SizedBox(width: 8),
-                                Text(
-                                  'CAHIER DE MAINTENANCE ',
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            value: 'maintenance',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MaintenanceListPage(
-                                    carId: id, 
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ];
-                      },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Liste des voitures',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    padding: EdgeInsets.all(12),
+                    itemBuilder: (context, index) {
+                      final item = items[index] as Map;
+                      final id = '${item['Id']}';
+
+                      return Card(
+                        child: ListTile(
+                          leading:
+                              Icon(Icons.directions_car, color: Colors.blue),
+                          title: Text(
+                            '${item['brand']} ${item['model']}',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          subtitle: Text(
+                            'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}',
+                          ),
+                          trailing: PopupMenuButton(
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                navigateToEditCarPage(item);
+                              } else if (value == 'delete') {
+                                deleteById(id);
+                              }
+                            },
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.edit, color: Colors.blue),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'MODIFIER',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ],
+                                  ),
+                                  value: 'edit',
+                                ),
+                                PopupMenuItem(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.delete, color: Colors.red),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'SUPPRIMER',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                  value: 'delete',
+                                ),
+                                PopupMenuItem(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.build, color: Colors.green),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'CAHIER DE MAINTENANCE ',
+                                        style: TextStyle(color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
+                                  value: 'maintenance',
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MaintenanceListPage(
+                                          carId: id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ];
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -213,7 +239,6 @@ class _CarListPageState extends State<CarListPage> {
       });
     } else {
       showErroMessage(context, message: "Deletion failed ");
-      
     }
   }
 }

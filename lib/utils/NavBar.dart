@@ -17,24 +17,29 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(username),
-            accountEmail: Text(email),
+            accountName: Text(
+              username,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            accountEmail: Text(
+              email,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             currentAccountPicture: CircleAvatar(
               child: Icon(
                 Icons.account_circle,
                 size: 60,
                 color: Colors.blueGrey,
               ),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.grey,
             ),
             decoration: BoxDecoration(
               color: Colors.blueGrey, // Couleur de fond bleue
             ),
           ),
           ListTile(
-            leading: Icon(
-              IconData(0xe1d7, fontFamily: 'MaterialIcons'),
-            ),
+            leading: Icon(IconData(0xe1d7, fontFamily: 'MaterialIcons'),
+                color: Colors.blue),
             title: Text('Voitures'),
             onTap: () {
               Navigator.push(
@@ -45,7 +50,7 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.warning),
+            leading: Icon(Icons.warning, color: Colors.blue),
             title: Text(
               'LES VOYANTS',
             ),
@@ -72,18 +77,13 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(
-              Icons.location_on,
-            ),
+            leading: Icon(Icons.location_on, color: Colors.blue),
             title: Text('CARTE'),
             onTap: () => null,
           ),
           Divider(),
           ListTile(
-            leading: Icon(
-              Icons.settings,
-              color: Colors.grey,
-            ),
+            leading: Icon(Icons.settings, color: Colors.grey),
             title: Text('Paramètre'),
             onTap: () {
               Navigator.push(

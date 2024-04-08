@@ -13,11 +13,21 @@ class NavBarAdmin extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text("ADMIN"),
-            accountEmail: Text(""),
-            currentAccountPicture: CircleAvatar(
-              child: Icon(Icons.account_circle, size: 48.0),
+            accountName: Text(
+              "ADMIN",
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            currentAccountPicture: CircleAvatar(
+              child: Icon(
+                Icons.account_circle,
+                size: 60,
+                color: Colors.blueAccent,
+              ),
+              backgroundColor: Colors.grey,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey, // Couleur de fond bleue
+            ), accountEmail: null,
           ),
           ListTile(
             leading: Icon(

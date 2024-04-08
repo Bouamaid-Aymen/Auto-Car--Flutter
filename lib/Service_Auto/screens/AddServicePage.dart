@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_app_car/Service_Auto/screens/RegisterServicePage.dart';
 
 class AddServicePage extends StatefulWidget {
   @override
@@ -102,7 +101,7 @@ class _AddServicePageState extends State<AddServicePage> {
             ElevatedButton(
               onPressed: () {
                 addService();
-                registerApi();
+              
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.all(1),
@@ -116,15 +115,7 @@ class _AddServicePageState extends State<AddServicePage> {
               ),
             ),
             SizedBox(height: 20),
-             Center(
-               child: GestureDetector(
-                  onTap: navigateToAddServicePage,
-                  child: Text(
-                    'Service connexion ',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                ),
-             ),
+            
           ],
         ),
       ),
@@ -139,6 +130,7 @@ class _AddServicePageState extends State<AddServicePage> {
     final nomP = nameController.text;
     final tel = phoneController.text;
     final address = addressController.text;
+    final password = passwordController.text;
 
     final body = {
       'nomS': nom,
@@ -146,8 +138,9 @@ class _AddServicePageState extends State<AddServicePage> {
       'nomP': nomP,
       'tel': tel,
       'adress': address,
+      "password": password
     };
-    print(body);
+  
     final response = await http.post(
       uri,
       body: jsonEncode(body),
@@ -158,33 +151,11 @@ class _AddServicePageState extends State<AddServicePage> {
       Get.snackbar('succès', 'Service ajouté avec succès',
           backgroundColor: Colors.green, snackPosition: SnackPosition.BOTTOM);
     } else {
-      print(response.body);
+      print(response.statusCode);
       Get.snackbar('Échoué', 'Échec de l`ajout du service',
           backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
     }
   }
 
-  Future<void> registerApi() async {
-    final email = emailController.text;
-    final username = nameController.text;
-    final password = passwordController.text;
-    final body = {"email": email, "username": username, "password": password};
-    const url = "http://localhost:3000/users/register";
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-    if (response.statusCode == 201) {
-    } else {
-       print(response.body);
-      Get.snackbar('Échoué', 'Échec de l`ajout comptepour le service du service',
-          backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
-    }
-  }
-  Future<void> navigateToAddServicePage() async {
-    final route = MaterialPageRoute(builder: (context) => RegisterServicePage());
-    await Navigator.push(context, route);
-  }
+
 }

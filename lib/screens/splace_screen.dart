@@ -33,12 +33,21 @@ class Splash_Screen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "AUTO-CAR",
+                      'Auto ',
                       style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
+                        color: Colors.blue,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
+                    Text(
+                      'Car',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -47,7 +56,7 @@ class Splash_Screen extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        "This is a Auto Car app for , Here you can find Avalible slot  slot from any where with you phone",
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce rutrum orci vel nunc pellentesque volutpat. Etiam eu placerat nunc. Integer nibh urna, iaculis nec tempus non, mollis ac lacus. Suspendisse condimentum semper turpis tincidunt consequat. Donec",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
@@ -86,7 +95,8 @@ class Splash_Screen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => RegisterPage()),
                   );
                 },
-                child: Text('S`inscrire', style: TextStyle(color: Colors.white)),
+                child:
+                    Text('S`inscrire', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green, // couleur de fond verte
                 ),
@@ -99,9 +109,10 @@ class Splash_Screen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddServicePage()),
                   );
                 },
-                child: Text('Ajouter une service',
+                child: Text('Service',
                     style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
+                   
                   backgroundColor: Color.fromARGB(
                       228, 153, 61, 61), // couleur de fond orange
                 ),
