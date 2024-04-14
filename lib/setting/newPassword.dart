@@ -43,7 +43,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
+        title: Text('Changer le mot de passe'),
       ),
       body: Container(
         padding: EdgeInsets.all(16),
@@ -69,7 +69,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             ),
             SizedBox(height: 5),
             SizedBox(height: 20),
-            Text('Old Password'),
+            Text('Ancien mot de passe'),
             SizedBox(height: 10),
             TextFormField(
               controller: pasOController,
@@ -85,7 +85,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('New Password'),
+            Text('Nouveau mot de passe'),
             SizedBox(height: 10),
             TextFormField(
               controller: pasNController,
@@ -101,7 +101,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Confirm New Password'),
+            Text('Confirmer le nouveau mot de passe'),
             SizedBox(height: 10),
             TextFormField(
               obscureText: _obscureConfirmPassword,
@@ -121,7 +121,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 onPressed: () {
                   upPassword(email);
                 },
-                child: Text('Change Password'),
+                child: Text('Changer le mot de passe',style: TextStyle(color: Colors.white),),
               ),
             ),
           ],

@@ -79,7 +79,8 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.location_on, color: Colors.blue),
             title: Text('CARTE'),
-            onTap: () => null,
+            onTap: () {
+            },
           ),
           Divider(),
           ListTile(

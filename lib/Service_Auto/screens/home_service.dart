@@ -155,11 +155,11 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Adresse: ',
+                          text: 'Gouvernorat ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
-                          text: service['adress'],
+                          text: service['gouvernorat'],
                         ),
                       ],
                     ),
@@ -170,13 +170,100 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       MaterialPageRoute(
                         builder: (context) => EditServicePage(
                           serviceId: service['id'],
-                          fieldName: 'adress',
-                          fieldValue: service['adress'],
+                          fieldName: 'gouvernorat',
+                          fieldValue: service['gouvernorat'],
                         ),
                       ),
                     );
                   },
                 ),
+                ListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      style: DefaultTextStyle.of(context).style,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Ville ',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        TextSpan(
+                          text: service['ville'],
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditServicePage(
+                          serviceId: service['id'],
+                          fieldName: 'ville',
+                          fieldValue: service['ville'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      style: DefaultTextStyle.of(context).style,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Description ',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        TextSpan(
+                          text: service['description'],
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditServicePage(
+                          serviceId: service['id'],
+                          fieldName: 'description',
+                          fieldValue: service['description'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      style: DefaultTextStyle.of(context).style,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Localisation ',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        TextSpan(
+                          text: service['localisation'],
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditServicePage(
+                          serviceId: service['id'],
+                          fieldName: 'localisation',
+                          fieldValue: service['localisation'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+
+                
                 Center(
                   child: ListTile(
                     title: RichText(

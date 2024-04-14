@@ -96,7 +96,7 @@ class NavBarAdmin extends StatelessWidget {
               ),
             ),
             title: Text(
-              'Exite',
+              'Quitter',
               style: TextStyle(color: Colors.blue),
             ),
             onTap: () async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ListeService extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class ListeService extends StatefulWidget {
 
 class _ListeServiceState extends State<ListeService> {
   List<dynamic> services = [];
+  List<dynamic> filteredServices = [];
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _ListeServiceState extends State<ListeService> {
     if (response.statusCode == 200) {
       setState(() {
         services = jsonDecode(response.body);
+        filteredServices = services;
       });
     } else {
       print('Failed to load services');
@@ -35,7 +38,29 @@ class _ListeServiceState extends State<ListeService> {
     final response = await http.delete(url);
 
     if (response.statusCode == 200) {
-      fetchServices();
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Voulez-vous vraiment supprimer ce service ?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () {
+                http.delete(url);
+                fetchServices();
+                Navigator.of(context).pop();
+              },
+              child: Text('Confirmer'),
+            ),
+          ],
+        ),
+      );
     } else {
       print('Failed to delete service');
     }
@@ -48,20 +73,17 @@ class _ListeServiceState extends State<ListeService> {
     if (response.statusCode == 200) {
       fetchServices();
     } else {
-      print('Failed to delete service');
+      print('Failed to verify service');
     }
-
   }
-  Future<void> verifyServiceN(int id) async {
-    final url = Uri.parse('http://localhost:3000/car/$id/serviceN');
-    final response = await http.patch(url);
 
-    if (response.statusCode == 200) {
-      fetchServices();
-    } else {
-      print('Failed to delete service');
-    }
-
+  void filterServices(String query) {
+    setState(() {
+      filteredServices = services
+          .where((service) =>
+              service['nomS'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -70,11 +92,21 @@ class _ListeServiceState extends State<ListeService> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Center(child: Text('Liste des Services')),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate: ServiceSearch(services, filterServices));
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
-        itemCount: services.length,
+        itemCount: filteredServices.length,
         itemBuilder: (context, index) {
-          final service = services[index];
+          final service = filteredServices[index];
           return Card(
             margin: EdgeInsets.all(8.0),
             child: Padding(
@@ -82,13 +114,40 @@ class _ListeServiceState extends State<ListeService> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfo('Email', service['email']),
-                  _buildInfo('Nom', service['nomP']),
-                  _buildInfo('Nom du service', service['nomS']),
-                  _buildInfo('Téléphone', service['tel'].toString()),
-                  _buildInfo('Adresse', service['adress']),
-                  _buildInfo('Vérifié', service['verifier'],
-                      isVerification: true),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              service['nomP'],
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            Text(
+                              service['nomS'],
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    service['verifier'],
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -116,24 +175,100 @@ class _ListeServiceState extends State<ListeService> {
                               color: Colors.green,
                             ),
                             SizedBox(width: 8),
-                            Text('OUI',
-                                style: TextStyle(color: Colors.green)),
+                            Text('OUI', style: TextStyle(color: Colors.green)),
                           ],
                         ),
                       ),
-                       TextButton(
-                        onPressed: () => verifyServiceN(service['id']),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.check,
-                              color: Colors.redAccent,
-                            ),
-                            SizedBox(width: 8),
-                            Text('NON',
-                                style: TextStyle(color: Colors.redAccent)),
-                          ],
-                        ),
+                      IconButton(
+                        icon: Icon(Icons.info),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Détails du service'),
+                                content: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text('Nom du service: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['nomS']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('Email: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['email']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('Nom: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['nomP']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('Téléphone: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['tel']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('gouvernorat: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['gouvernorat']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('ville: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['ville']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('description: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['description']}',
+                                        style: TextStyle(color: Colors.grey)),
+                                    SizedBox(height: 8), // Espacement
+                                    GestureDetector(
+                                      onTap: () {
+                                        launchUrlString(
+                                            '${service['localisation']}');
+                                      },
+                                      child: Text('localisation: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        launchUrlString(
+                                            '${service['localisation']}');
+                                      },
+                                      child: Text(
+                                        '${service['localisation']}',
+                                        style: TextStyle(
+                                          color: Color.fromARGB(255, 48, 0, 132),
+                                          fontWeight:
+                                              FontWeight.bold, 
+                                          decoration: TextDecoration
+                                              .underline, 
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8), // Espacement
+                                    Text('Vérifié: ',
+                                        style: TextStyle(color: Colors.blue)),
+                                    Text('${service['verifier']}',
+                                        style: TextStyle(color: Colors.green)),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Fermer'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -146,25 +281,56 @@ class _ListeServiceState extends State<ListeService> {
       ),
     );
   }
+}
 
-  Widget _buildInfo(String title, String value, {bool isVerification = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(color: isVerification ? Colors.green : Colors.white),
-        ),
-        SizedBox(height: 8),
-      ],
+class ServiceSearch extends SearchDelegate<String> {
+  final List<dynamic> services;
+  final Function(String) filterServices;
+
+  ServiceSearch(this.services, this.filterServices);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+          filterServices(query);
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ListView(
+      children: services
+          .where((service) =>
+              service['nomS'].toLowerCase().contains(query.toLowerCase()))
+          .map((service) => ListTile(
+                title: Text(service['nomS']),
+                onTap: () {
+                  filterServices(service['nomS']);
+                  close(context, service['nomS']);
+                },
+              ))
+          .toList(),
     );
   }
 }

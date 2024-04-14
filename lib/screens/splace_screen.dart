@@ -14,6 +14,27 @@ class Splash_Screen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Auto ',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Car',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
           Expanded(
             flex: 9,
             child: Column(
@@ -29,27 +50,6 @@ class Splash_Screen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Auto ',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Car',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class Splash_Screen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
-                          color: Colors.grey,
+                          color: Colors.white,
                         ),
                       ),
                     )
@@ -109,10 +109,8 @@ class Splash_Screen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddServicePage()),
                   );
                 },
-                child: Text('Service',
-                    style: TextStyle(color: Colors.white)),
+                child: Text('Service', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                   
                   backgroundColor: Color.fromARGB(
                       228, 153, 61, 61), // couleur de fond orange
                 ),
