@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
 
-
 class AddServicePage extends StatefulWidget {
   @override
   _AddServicePageState createState() => _AddServicePageState();
@@ -18,6 +17,7 @@ class _AddServicePageState extends State<AddServicePage> {
   String selectedCity = 'Tunis';
   TextEditingController selectedGovernorateController = TextEditingController();
   TextEditingController selectedCityController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -33,7 +33,7 @@ class _AddServicePageState extends State<AddServicePage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController DescriptionController = TextEditingController();
   final TextEditingController localisationController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,142 +42,193 @@ class _AddServicePageState extends State<AddServicePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: 'Nom *',
-                prefixIcon: Icon(Icons.person, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Nom *',
+                  prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-  
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email *',
-                prefixIcon: Icon(Icons.email, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email *',
+                  prefixIcon: Icon(Icons.email, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                labelText: 'Mot de passe *',
-                prefixIcon: Icon(Icons.lock, color: Colors.blue),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.blue,
+              TextFormField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Mot de passe *',
+                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.blue,
+                    ),
+                    onPressed: _togglePasswordVisibility,
                   ),
-                  onPressed: _togglePasswordVisibility,
+                  labelStyle: TextStyle(color: Colors.white),
                 ),
-                labelStyle: TextStyle(color: Colors.white),
+                obscureText: _obscureText,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-              obscureText: _obscureText,
-            ),
-            TextField(
-              controller: phoneController,
-              decoration: InputDecoration(
-                labelText: 'Téléphone *',
-                prefixIcon: Icon(Icons.phone, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              TextFormField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Téléphone *',
+                  prefixIcon: Icon(Icons.phone, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                keyboardType: TextInputType.phone,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(8), 
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire ';
+                  }
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedGovernorate,
-              onChanged: (value) {
-                setState(() {
-                  selectedGovernorate = value!;
-                  selectedCity = citiesByGovernorate[value]![0];
-                  selectedGovernorateController.text = value;
-                  selectedCityController.text = selectedCity;
-                });
-              },
-              items: governorates.map((governorate) {
-                return DropdownMenuItem<String>(
-                  value: governorate,
-                  child: Text(governorate),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Gouvernorat *',
-                prefixIcon: Icon(Icons.location_on, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              DropdownButtonFormField<String>(
+                value: selectedGovernorate,
+                onChanged: (value) {
+                  setState(() {
+                    selectedGovernorate = value!;
+                    selectedCity = citiesByGovernorate[value]![0];
+                    selectedGovernorateController.text = value;
+                    selectedCityController.text = selectedCity;
+                  });
+                },
+                items: governorates.map((governorate) {
+                  return DropdownMenuItem<String>(
+                    value: governorate,
+                    child: Text(governorate),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Gouvernorat *',
+                  prefixIcon: Icon(Icons.location_on, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedCity,
-              onChanged: (value) {
-                setState(() {
-                  selectedCity = value!;
-                  selectedCityController.text = value;
-                });
-              },
-              items: citiesByGovernorate[selectedGovernorate]!.map((city) {
-                return DropdownMenuItem<String>(
-                  value: city,
-                  child: Text(city),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Ville *',
-                prefixIcon: Icon(Icons.location_on, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              DropdownButtonFormField<String>(
+                value: selectedCity,
+                onChanged: (value) {
+                  setState(() {
+                    selectedCity = value!;
+                    selectedCityController.text = value;
+                  });
+                },
+                items: citiesByGovernorate[selectedGovernorate]!.map((city) {
+                  return DropdownMenuItem<String>(
+                    value: city,
+                    child: Text(city),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Ville *',
+                  prefixIcon: Icon(Icons.location_on, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextField(
-              controller: serviceNameController,
-              decoration: InputDecoration(
-                labelText: 'Service *',
-                prefixIcon: Icon(Icons.room_service, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              TextFormField(
+                controller: serviceNameController,
+                decoration: InputDecoration(
+                  labelText: 'Service *',
+                  prefixIcon: Icon(Icons.room_service, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextField(
-              controller: DescriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description *',
-                prefixIcon: Icon(Icons.room_service, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
+              TextFormField(
+                controller: DescriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Description *',
+                  prefixIcon: Icon(Icons.room_service, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ce champ est obligatoire';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextField(
-  controller: localisationController,
-  decoration: InputDecoration(
-    labelText: 'Localisation (lien google maps)',
-    prefixIcon: Icon(Icons.room_service, color: Colors.blue),
-    labelStyle: TextStyle(color: Colors.white),
-  ),
-  onTap: () {
-    launchUrlString('https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu');
-  },
-),
-
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                addService();
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(1),
-                backgroundColor: Colors.blue,
+              TextFormField(
+                controller: localisationController,
+                decoration: InputDecoration(
+                  labelText: 'Localisation (lien google maps)',
+                  prefixIcon: Icon(Icons.room_service, color: Colors.blue),
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  launchUrlString(
+                      'https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu');
+                },
               ),
-              child: Text(
-                'Ajouter le service',
-                style: TextStyle(
-                  color: Colors.white,
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    addService();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(1),
+                  backgroundColor: Colors.blue,
+                ),
+                child: Text(
+                  'Ajouter le service',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          
-          ],
+            ],
+          ),
         ),
       ),
     );

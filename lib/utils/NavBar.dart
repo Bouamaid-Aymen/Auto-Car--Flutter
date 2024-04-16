@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/ChatBot/searching.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
+import 'package:my_app_car/screens/listservice.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/my_car.dart';
 import 'package:my_app_car/setting/setting.dart';
@@ -77,9 +78,14 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.location_on, color: Colors.blue),
-            title: Text('CARTE'),
+            leading: Icon(Icons.list, color: Colors.blue),
+            title: Text('Liste des services '),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ServiceListUPage ()),
+              );
+              
             },
           ),
           Divider(),
@@ -96,7 +102,7 @@ class NavBar extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(
-              IconData(0xe243, fontFamily: 'MaterialIcons'),
+              IconData(0xe243, fontFamily: 'MaterialIcons'),  
               color: Colors.red,
             ),
             title: Text('Sortie'),
