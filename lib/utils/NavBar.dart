@@ -18,30 +18,47 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(
-              username,
-              style: TextStyle(fontWeight: FontWeight.bold),
+            accountName: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(""),
+                Text(""),
+              ],
             ),
-            accountEmail: Text(
-              email,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            currentAccountPicture: CircleAvatar(
-              child: Icon(
-                Icons.account_circle,
-                size: 60,
-                color: Colors.blueGrey,
-              ),
-              backgroundColor: Colors.grey,
-            ),
+            accountEmail: null,
             decoration: BoxDecoration(
-              color: Colors.blueGrey, // Couleur de fond bleue
+              image: DecorationImage(
+                image: AssetImage("assets/images/navBar.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            currentAccountPictureSize: Size(100.0, 100.0),
+          ),
+          ListTile(
+            leading: CircleAvatar(
+              child: Icon(Icons.account_circle, color: Colors.white, size: 36),
+              backgroundColor: const Color.fromARGB(0, 158, 158, 158),
+            ),
+            title: Text(
+              username,
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              email,
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+          Divider(),
           ListTile(
             leading: Icon(IconData(0xe1d7, fontFamily: 'MaterialIcons'),
                 color: Colors.blue),
-            title: Text('Voitures'),
+            title: Text('Les Voitures'),
             onTap: () {
               Navigator.push(
                 context,
@@ -53,7 +70,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.warning, color: Colors.blue),
             title: Text(
-              'LES VOYANTS',
+              'Les voyants',
             ),
             onTap: () {
               Navigator.push(
@@ -65,10 +82,10 @@ class NavBar extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(
-              Icons.chat_bubble,
+              Icons.car_crash_rounded,
               color: Colors.blue,
             ),
-            title: Text('CHAT BOT'),
+            title: Text('Mon mécano'),
             onTap: () {
               Navigator.push(
                 context,
@@ -83,9 +100,8 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ServiceListUPage ()),
+                MaterialPageRoute(builder: (context) => ServiceListUPage()),
               );
-              
             },
           ),
           Divider(),
@@ -101,11 +117,19 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
+            leading: Icon(Icons.contact_emergency, color: Colors.blue),
+            title: Text(
+              'Contact',
+            ),
+            onTap: () {},
+          ),
+          Divider(),
+          ListTile(
             leading: Icon(
-              IconData(0xe243, fontFamily: 'MaterialIcons'),  
+              IconData(0xe243, fontFamily: 'MaterialIcons'),
               color: Colors.red,
             ),
-            title: Text('Sortie'),
+            title: Text('Quitter'),
             onTap: () async {
               Navigator.push(
                 context,

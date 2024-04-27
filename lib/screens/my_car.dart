@@ -60,10 +60,7 @@ class _MyCarState extends State<MyCar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(isEdit ? 'MODIFIER VOITURE' : 'GARAGE '),
-              Icon(
-                Icons.garage,
-              ),
+              Text(isEdit ? 'MODIFIER VOITURE' : 'Ajouter une voiture'),
             ],
           ),
         ),
@@ -82,7 +79,7 @@ class _MyCarState extends State<MyCar> {
                   padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
                     underline: Container(),
-                    hint: Text('Sélectionnez la marque'),
+                    hint: Text('Choisir la marque'),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     isDense: true,
                     isExpanded: true,
@@ -115,7 +112,7 @@ class _MyCarState extends State<MyCar> {
                   padding: const EdgeInsets.all(15.0),
                   child: DropdownButton<String>(
                     underline: Container(),
-                    hint: Text('Sélectionnez le modèle'),
+                    hint: Text('Choisire le modèle'),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     isDense: true,
                     isExpanded: true,
@@ -165,29 +162,6 @@ class _MyCarState extends State<MyCar> {
                 prefixIcon: Icon(Icons.directions_car),
               ),
             ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: lastOilChangeController,
-              onTap: () async {
-                DateTime? selectedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (selectedDate != null) {
-                  setState(() {
-                    lastOilChangeDate = selectedDate;
-                    lastOilChangeController.text = selectedDate.toString();
-                  });
-                }
-              },
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Entrez la date de la dernière vidange d`huile',
-                prefixIcon: Icon(Icons.event),
-              ),
-            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: isEdit
@@ -199,7 +173,10 @@ class _MyCarState extends State<MyCar> {
                         km,
                         lastOilChangeDate.toString(),
                       ),
-              child: Text(isEdit ? 'Enregistrer' : 'Enregistrer'),
+              child: Text(
+                isEdit ? 'Enregistrer' : 'Enregistrer',
+                style: TextStyle(color: Colors.white),
+              ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),

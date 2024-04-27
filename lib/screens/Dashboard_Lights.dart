@@ -41,8 +41,6 @@ class _UserPageState extends State<UserPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            
-            
               Text(
                 'Liste des voyants',
                 style: TextStyle(fontSize: 20),
@@ -58,7 +56,7 @@ class _UserPageState extends State<UserPage> {
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
-                hintText: 'Chercher par nom',
+                hintText: '   Rechercher',
                 prefixIcon: Icon(Icons.search),
               ),
               onChanged: (value) {

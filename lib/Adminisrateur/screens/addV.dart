@@ -41,7 +41,12 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
     fetchVoyants();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Dashboard Light'),
+        title: Center(
+          child: Text(
+            'Liste des voyants ',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

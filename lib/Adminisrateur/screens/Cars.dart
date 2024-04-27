@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_app_car/utils/NavBarAdmin.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
+import 'package:snippet_coder_utils/hex_color.dart';
 
 class DropdownScreen extends StatefulWidget {
   @override
@@ -34,8 +35,8 @@ class _DropdownScreenState extends State<DropdownScreen> {
     return Scaffold(
       drawer: NavBarAdmin(),
       appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: Center(child: Text("AJOUTER DES VOITURES "))),
+        title: Center(child: Text("Ajouter Marque & Modél  ")),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -45,63 +46,70 @@ class _DropdownScreenState extends State<DropdownScreen> {
               const Center(child: CircularProgressIndicator())
             else
               Card(
+
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       DropdownButton<String>(
-                          underline: Container(),
-                          hint: Text("Select Brand"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          isDense: true,
-                          isExpanded: true,
-                          value: selectedBrand,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedBrand = value;
-                              isBrandSelected = true;
-                              selectedModel = null;
-                              for (int i = 0; i < _brands.length; i++) {
-                                if (_brands[i]["name"] == value) {
-                                  _models = _brands[i]["model"];
-                                  selectedBrandId = _brands[i]["id"].toString();
-                                }
+                        underline: Container(),
+                        hint: Text("Choisir une marque"),
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        isDense: true,
+                        isExpanded: true,
+                        value: selectedBrand,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedBrand = value;
+                            isBrandSelected = true;
+                            selectedModel = null;
+                            for (int i = 0; i < _brands.length; i++) {
+                              if (_brands[i]["name"] == value) {
+                                _models = _brands[i]["model"];
+                                selectedBrandId = _brands[i]["id"].toString();
                               }
-                            });
-                          },
-                          items: _brands.map((brand) {
-                            return DropdownMenuItem<String>(
-                                value: brand["name"],
-                                child: Text(brand["name"]));
-                          }).toList()),
+                            }
+                          });
+                        },
+                        items: _brands.map((brand) {
+                          return DropdownMenuItem<String>(
+                              value: brand["name"], child: Text(brand["name"]));
+                        }).toList(),
+                      ),
                       SizedBox(height: 10),
-                      Row(
+                      TextFormField(
+                        controller: brandController,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          labelText: 'Enter votre brand',
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: brandController,
-                              onChanged: (value) {
-                                setState(() {
-                                  // Ajoutez votre logique ici
-                                });
-                              },
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Enter votre brand',
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: AddBrand,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.green,
+                            ),
                             child: Text('Ajouter des marques'),
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(height: 8),
                           ElevatedButton(
                             onPressed: deletebrandmodel,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red,
+                            ),
                             child: Text('Supprimer des marques'),
                           ),
                         ],
@@ -114,55 +122,62 @@ class _DropdownScreenState extends State<DropdownScreen> {
             if (isBrandSelected)
               Card(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       DropdownButton<String>(
-                          underline: Container(),
-                          hint: Text("Select Model"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          isDense: true,
-                          isExpanded: true,
-                          value: selectedModel,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedModel = value;
-                            });
-                          },
-                          items: _models.map((model) {
-                            return DropdownMenuItem<String>(
-                                value: model["id"].toString(),
-                                child: Text(model["name"]));
-                          }).toList()),
+                        underline: Container(),
+                        hint: Text("Choisir une modél"),
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        isDense: true,
+                        isExpanded: true,
+                        value: selectedModel,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedModel = value;
+                          });
+                        },
+                        items: _models.map((model) {
+                          return DropdownMenuItem<String>(
+                              value: model["id"].toString(),
+                              child: Text(model["name"]));
+                        }).toList(),
+                      ),
                       SizedBox(height: 10),
-                      Row(
+                      TextFormField(
+                        controller: modelController,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          labelText: 'Enter votre model',
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: modelController,
-                              onChanged: (value) {
-                                setState(() {
-                                
-                                });
-                              },
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Enter votre model',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
                           ElevatedButton(
                             onPressed: addmodeltobrand,
-                            child: Text('Ajouter des models '),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.green,
+                            ),
+                            child: Text('Ajouter des modèles'),
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(height: 8),
                           ElevatedButton(
-                            onPressed: () {},
-                            child: Text('Supprimer des  models '),
+                            onPressed: deletemodel,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red,
+                            ),
+                            child: Text('Supprimer des modèles'),
                           ),
                         ],
                       ),
@@ -187,10 +202,9 @@ class _DropdownScreenState extends State<DropdownScreen> {
     if (response.statusCode == 201) {
       brandController.text = "";
       modelController.text = "";
-      showSuccessMessage(context, message: " Update Success");
-      print(selectedBrand);
+      showSuccessMessage(context, message: " La création avec succès");
     } else {
-      showErroMessage(context, message: 'Creation failed');
+      showErroMessage(context, message: 'La création a échoué');
     }
   }
 
@@ -206,12 +220,12 @@ class _DropdownScreenState extends State<DropdownScreen> {
       if (response.statusCode == 201) {
         modelController.text = "";
         showSuccessMessage(context,
-            message: "New model added to brand: $selectedBrand");
+            message: "Nouveau modèle ajouté à la marque : $selectedBrand");
       } else {
-        showErroMessage(context, message: 'Creation failed');
+        showErroMessage(context, message: 'La création a échoué');
       }
     } else {
-      showErroMessage(context, message: 'No brand selected');
+      showErroMessage(context, message: 'Aucune marque sélectionnée');
     }
   }
 
@@ -233,10 +247,36 @@ class _DropdownScreenState extends State<DropdownScreen> {
     final response = await http.delete(uri);
 
     if (response.statusCode == 200) {
-      final route = MaterialPageRoute(builder: (context) => DropdownScreen());
-      await Navigator.push(context, route);
+      setState(() {
+        _brands
+            .removeWhere((brand) => brand["id"].toString() == selectedBrandId);
+        selectedBrand = null;
+        selectedBrandId = null;
+      });
+      showSuccessMessage(context, message: "Suppression avec succès");
     } else {
-      print(response.body);
+      showErroMessage(context, message: 'Suppression avec échoué');
+    }
+  }
+
+  Future<void> deletemodel() async {
+    if (selectedBrandId != null && selectedModel != null) {
+      final url = "http://localhost:3000/car/$selectedBrandId/model/";
+      final uri = Uri.parse(url);
+      final response = await http.delete(uri);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _models
+              .removeWhere((model) => model["id"].toString() == selectedModel);
+          selectedModel = null;
+        });
+        showSuccessMessage(context, message: "Suppression avec succès");
+      } else {
+        showErroMessage(context, message: 'Suppression avec échoué');
+      }
+    } else {
+      showErroMessage(context, message: 'Aucune marque ou modèle sélectionné');
     }
   }
 }

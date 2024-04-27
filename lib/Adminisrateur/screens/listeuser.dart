@@ -26,7 +26,6 @@ class _userListPageState extends State<userListPage> {
     return Scaffold(
       drawer: NavBarAdmin(),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -34,8 +33,9 @@ class _userListPageState extends State<userListPage> {
               SizedBox(width: 8),
               Text(
                 'Liste des utilisateurs ',
+                style: TextStyle(color: Colors.white),
               ),
-              Icon(Icons.content_paste_rounded, color: Colors.white)
+              Icon(Icons.content_paste_rounded, color: Colors.grey)
             ],
           ),
         ),
@@ -59,8 +59,7 @@ class _userListPageState extends State<userListPage> {
                     'Username:${item['username']}      Email : ${item['email']}',
                     style: TextStyle(color: Colors.blue),
                   ),
-                  subtitle: Text(
-                      'Create at : ${item['CreatedAt']}    Role: ${item['role']}'),
+                  subtitle: Text('    Role: ${item['role']}'),
                   trailing: PopupMenuButton(onSelected: (value) {
                     if (value == 'delete') {
                       deleteById(id);
@@ -106,41 +105,40 @@ class _userListPageState extends State<userListPage> {
   }
 
   Future<void> deleteById(id) async {
-  bool confirmDelete = await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Confirmation"),
-        content: Text("Êtes-vous sûr de vouloir supprimer cet utilisateur ?"),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); 
-            },
-            child: Text("Oui"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: Text("Non"),
-          ),
-        ],
-      );
-    },
-  );
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirmation"),
+          content: Text("Êtes-vous sûr de vouloir supprimer cet utilisateur ?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text("Oui"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text("Non"),
+            ),
+          ],
+        );
+      },
+    );
 
-  if (confirmDelete == true) {
-    final isSuccess = await CarService.deleteByuser(id);
-    if (isSuccess) {
-      final filtered = items.where((element) => element['id'] != id).toList();
-      setState(() {
-        items = filtered;
-      });
-    } else {
-      showErroMessage(context, message: "La suppression a échoué");
+    if (confirmDelete == true) {
+      final isSuccess = await CarService.deleteByuser(id);
+      if (isSuccess) {
+        final filtered = items.where((element) => element['id'] != id).toList();
+        setState(() {
+          items = filtered;
+        });
+      } else {
+        showErroMessage(context, message: "La suppression a échoué");
+      }
     }
   }
-}
-
 }

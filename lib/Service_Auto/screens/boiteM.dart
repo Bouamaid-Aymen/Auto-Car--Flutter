@@ -5,24 +5,30 @@ import 'dart:convert';
 import 'package:my_app_car/screens/Car_list.dart';
 
 class Message {
+  final int id;
   final String message;
   final String usernameU;
   final String email;
   final String nomService;
+  final int idUser;
 
   Message({
+    required this.id,
     required this.message,
     required this.usernameU,
     required this.email,
     required this.nomService,
+    required this.idUser,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
+      id: json['id'],
       message: json['message'],
       usernameU: json['usernameU'],
-      email: json['email'], 
+      email: json['email'],
       nomService: json['nom_service'],
+      idUser: json['idUser'],
     );
   }
 }
@@ -34,8 +40,7 @@ class MessageListPage extends StatefulWidget {
 
 class _MessageListPageState extends State<MessageListPage> {
   TextEditingController messageController = TextEditingController();
-  late Future<List<Message>> futureMessages;
-  List<dynamic> services = [];
+  late Future<Map<int, List<Message>>> futureMessages;
 
   @override
   void initState() {
@@ -43,36 +48,47 @@ class _MessageListPageState extends State<MessageListPage> {
     futureMessages = fetchMessages();
   }
 
-  Future<List<Message>> fetchMessages() async {
+  Future<Map<int, List<Message>>> fetchMessages() async {
     final String email = TokenStorage.getEmail();
-
 
     final response =
         await http.get(Uri.parse('http://localhost:3000/users/message'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<Message> messages = data
-          .where((json) => json['email'].toLowerCase() == email.toLowerCase())
-          .map((json) => Message.fromJson(json))
-          .toList();
-      return messages;
+      if (data.isNotEmpty) {
+        List<Message> messages = data
+            .where((json) => json['email'].toLowerCase() == email.toLowerCase())
+            .map((json) => Message.fromJson(json))
+            .toList();
+
+        Map<int, List<Message>> messagesByUser = {};
+        messages.forEach((message) {
+          if (!messagesByUser.containsKey(message.idUser)) {
+            messagesByUser[message.idUser] = [];
+          }
+          messagesByUser[message.idUser]!.add(message);
+        });
+        return messagesByUser;
+      } else {
+        return {};
+      }
     } else {
       throw Exception('Failed to load messages');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-            child: Text(
-          'Boite de messagerie',
-          style: TextStyle(color: Colors.blue),
-        )),
+          child: Text(
+            'Boite de messagerie',
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
       ),
-      body: FutureBuilder<List<Message>>(
+      body: FutureBuilder<Map<int, List<Message>>>(
         future: futureMessages,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,63 +96,74 @@ class _MessageListPageState extends State<MessageListPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Erreur: ${snapshot.error}'));
           } else {
-            List<Message> messages = snapshot.data!;
+            Map<int, List<Message>> messagesByUser = snapshot.data!;
             return ListView.builder(
-              itemCount: messages.length * 2 - 1,
+              itemCount: messagesByUser.length,
               itemBuilder: (context, index) {
-                if (index.isOdd) {
-                  return Divider();
-                }
-                final messageIndex = index ~/ 2;
-                Message message = messages[messageIndex];
-                return ListTile(
-                  title: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Message en par : ',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 20,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '${message.usernameU}',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
+                int userId = messagesByUser.keys.elementAt(index);
+                List<Message> messages = messagesByUser[userId]!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ExpansionTile(
+                      title: Text('Messages pour l\'utilisateur $userId'),
+                      children: messages.map((message) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(message.message),
+                              subtitle:
+                                  Text('Envoyé par: ${message.usernameU}'),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                          'Conversation avec ${message.usernameU}'),
+                                      content: Column(
+                                        children: [
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemCount: messages.length,
+                                            itemBuilder: (context, index) {
+                                              Message message = messages[index];
+                                              return ListTile(
+                                                title: Text(message.message),
+                                                subtitle: Text(
+                                                    'Envoyé par: ${message.usernameU}'),
+                                              );
+                                            },
+                                          ),
+                                          TextField(
+                                            controller: messageController,
+                                            decoration: InputDecoration(
+                                              hintText: 'Votre réponse...',
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // Envoyer la réponse
+                                              // Implémentez la logique d'envoi de la réponse
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Envoyer'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      }).toList(),
                     ),
-                  ),
-                  subtitle: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Message: ',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 16,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '${message.message}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  tileColor: const Color.fromARGB(141, 158, 158, 158),
-                  contentPadding: EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  ],
                 );
               },
             );
@@ -145,6 +172,4 @@ class _MessageListPageState extends State<MessageListPage> {
       ),
     );
   }
-
-
 }

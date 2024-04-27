@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app_car/setting/emailpage.dart';
 import 'package:my_app_car/setting/newPassword.dart';
 
 class Setting extends StatefulWidget {
@@ -36,10 +37,10 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(207, 158, 158, 158),
+        backgroundColor: Colors.blue,
         title: Center(
           child: Text(
-            'PARAMÈTRE',
+            'Paramétre',
             style: TextStyle(fontSize: 22),
           ),
         ),
@@ -67,7 +68,7 @@ class _SettingState extends State<Setting> {
                   width: 10,
                 ),
                 Text(
-                  "Account",
+                  "Profil",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 )
               ],
@@ -79,59 +80,12 @@ class _SettingState extends State<Setting> {
             SizedBox(
               height: 10,
             ),
-            buildAccountOption(context, "Change password"),
-            buildAccountOption(context, "Content Setting"),
-            buildAccountOption(context, "Social"),
-            buildAccountOption(context, "Languages"),
-            buildAccountOption(context, "Privacy and Security"),
-            SizedBox(height: 40),
-            Row(
-              children: [
-                Icon(
-                  Icons.volume_up_outlined,
-                  color: Colors.blue,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'notification ',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Divider(
-              height: 20,
-              thickness: 1,
-            ),
+            buildAccountOption(context, "Changer mot de passe"),
+            buildAccountOption(context, "Changer profil"),
             SizedBox(
-              height: 10,
+              height: 170,
             ),
-            buildNotificationOption(
-                "Theme Darke", valNotify1, onChangeFunction1),
-            buildNotificationOption(
-                "Account Activer", valNotify2, onChangeFunction2),
-            buildNotificationOption(
-                "Opportunity", valNotify3, onChangeFunction3),
-            SizedBox(
-              height: 50,
-            ),
-            Center(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                onPressed: () {},
-                child: Text(
-                  'Sign Out ',
-                  style: TextStyle(
-                      fontSize: 16, letterSpacing: 2.2, color: Colors.blue),
-                ),
-              ),
-            )
+            
           ],
         ),
       ),
@@ -168,10 +122,15 @@ class _SettingState extends State<Setting> {
   GestureDetector buildAccountOption(BuildContext context, String title) {
     return GestureDetector(
       onTap: () {
-        if (title == "Change password") {
+        if (title == "Changer mot de passe") {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+          );
+        } else if (title == "Changer profil") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChangeEmailPage()),
           );
         } else {
           Navigator.push(

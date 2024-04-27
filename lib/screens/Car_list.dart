@@ -96,7 +96,6 @@ class _CarListPageState extends State<CarListPage> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.transparent, // Couleur de fond
-             
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,14 +123,17 @@ class _CarListPageState extends State<CarListPage> {
 
                       return Card(
                         child: ListTile(
-                          leading:
-                              Icon(Icons.directions_car, color: Colors.blue),
+                          leading: Icon(Icons.directions_car,
+                              color: Color.fromARGB(255, 133, 1, 1)),
                           title: Text(
-                            '${item['brand']} ${item['model']}',
-                            style: TextStyle(color: Colors.blue),
+                            '${item['brand']} ${item['model']}:',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                            ),
                           ),
                           subtitle: Text(
-                            'Age: ${item['age']} ans, KM: ${item['km']}, Dernière vidange: ${item['lastOilChangeDate']}',
+                            '           Age: ${item['age']} ans      KM: ${item['km']}',
                           ),
                           trailing: PopupMenuButton(
                             onSelected: (value) {
@@ -144,7 +146,6 @@ class _CarListPageState extends State<CarListPage> {
                             itemBuilder: (context) {
                               return [
                                 PopupMenuItem(
-                                  
                                   child: Row(
                                     children: [
                                       Icon(Icons.edit, color: Colors.blue),
@@ -234,15 +235,39 @@ class _CarListPageState extends State<CarListPage> {
   }
 
   Future<void> deleteById(id) async {
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirmation"),
+          content: Text("Voulez-vous vraiment supprimer cet élément ?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text("Annuler"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text("Confirmer"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == null || !confirmDelete) {
+      return;
+    }
+
     final isSuccess = await CarService.deleteBycar(id);
     if (isSuccess) {
-      showSuccessMessage(context, message: "Deletion success");
+      showSuccessMessage(context, message: "Succès de la suppression");
       final filtred = items.where((element) => element['Id'] != id).toList();
       setState(() {
         items = filtred;
       });
     } else {
-      showErroMessage(context, message: "Deletion failed ");
+      showErroMessage(context, message: "La suppression a échoué ");
     }
   }
 }

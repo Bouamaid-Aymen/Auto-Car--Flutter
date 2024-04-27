@@ -11,8 +11,8 @@ class ServiceListUPage extends StatefulWidget {
 
 class _ServiceListUPageState extends State<ServiceListUPage> {
   List<dynamic> services = [];
-  String selectedGovernorate = 'Tunis';
-  String selectedCity = 'Tunis';
+  String selectedGovernorate = 'Nabeul';
+  String selectedCity = 'Soliman';
   TextEditingController messageController = TextEditingController();
 
   @override
@@ -28,7 +28,7 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
       final List<dynamic> allServices = jsonDecode(response.body);
 
       setState(() {
-        if (selectedGovernorate != 'Tunis' || selectedCity != 'Tunis') {
+        if (selectedGovernorate != 'Nabeul' || selectedCity != 'Soliman') {
           services = allServices
               .where((service) =>
                   service['verifier'] == 'OUI' &&
@@ -56,9 +56,40 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Center(
             child: Text('Liste des services',
-                style: TextStyle(color: Colors.blue))),
+                style: TextStyle(color: Colors.white))),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Row(
+              children: [
+                Icon(
+                  Icons.map,
+                  color: Colors.green,
+                ),
+                SizedBox(width: 5),
+                Text('Google Maps'),
+              ],
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Image.asset('assets/images/maps.jpg'),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -143,82 +174,96 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
                           ),
                         ),
                       ),
-                      
                       ListTile(
-                        title: Text(
-                            'Nom et Prénom de personne: ${service['nomP']}'),
+                        title: Text('Nom et Prénom : ${service['nomP']}'),
                       ),
                       ListTile(
                         title: Text('Téléphone: ${service['tel']}'),
                       ),
-                      ListTile(
-                        title: Text('Gouvernorat: ${service['gouvernorat']}'),
-                      ),
-                      ListTile(
-                        title: Text('Ville: ${service['ville']}'),
-                      ),
-                      ListTile(
-                        title: Text('Description: ${service['description']}'),
-                      ),
-                      ListTile(
-                        title: GestureDetector(
-                          onTap: () {
-                            launchUrlString('${service['localisation']}');
-                          },
-                          child: Text(
-                            'Localisation: ${service['localisation']}',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ),
-                      ListTile(
+                      ExpansionTile(
                         title: Row(
                           children: [
+                            Icon(Icons.info_outline, color: Colors.grey),
+                            SizedBox(width: 8),
                             Text(
-                              'Envoyer un message',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.message),
-                              color: Color.fromARGB(255, 72, 0, 103),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                          'Envoyer un message ( Entrer votre numero pour contacter ) '),
-                                      content: TextField(
-                                        controller: messageController,
-                                        decoration: InputDecoration(
-                                          hintText:
-                                              'Entrez votre message ici...',
-                                        ),
-                                        maxLines: null,
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text('Envoyer'),
-                                          onPressed: () {
-                                            messageApi(
-                                                username, service, emailU);
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('Annuler'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
+                              'Plus d\'informations',
+                              style: TextStyle(color: Colors.grey),
                             ),
                           ],
                         ),
+                        children: [
+                          ListTile(
+                            title:
+                                Text('Gouvernorat: ${service['gouvernorat']}'),
+                          ),
+                          ListTile(
+                            title: Text('Ville: ${service['ville']}'),
+                          ),
+                          ListTile(
+                            title:
+                                Text('Description: ${service['description']}'),
+                          ),
+                          ListTile(
+                            title: GestureDetector(
+                              onTap: () {
+                                launchUrlString('${service['localisation']}');
+                              },
+                              child: Text(
+                                'Localisation: ${service['localisation']}',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            title: Row(
+                              children: [
+                                Text(
+                                  'Envoyer un message',
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.message),
+                                  color: Color.fromARGB(255, 72, 0, 103),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              'Envoyer un message ( Entrer votre numero pour contacter ) '),
+                                          content: TextField(
+                                            controller: messageController,
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Entrez votre message ici...',
+                                            ),
+                                            maxLines: null,
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text('Envoyer'),
+                                              onPressed: () {
+                                                messageApi(username, service,
+                                                    emailU, service['id']);
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Annuler'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -231,23 +276,25 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
     );
   }
 
-  Future<void> messageApi(
-      String username, Map<String, dynamic> service, String emailU) async {
+  Future<void> messageApi(String username, Map<String, dynamic> service,
+      String emailU, int serviceId) async {
     final message = messageController.text;
     final body = {
-      "message": message,
+      "message": "dsgfsdgdfsg",
       "usernameU": username,
       "email": service['email'],
       "nom_service": service['nomS'],
-      "emailU": emailU
+      "emailU": emailU,
+      "idUser": serviceId
     };
-    const url = "http://localhost:3000/users/message";
+
+    String? token = await TokenStorage.getToken();
+    const url = 'http://localhost:3000/users/message';
     final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
+    final response = await http.post(uri, body: jsonEncode(body), headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer $token'
+    });
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -256,6 +303,7 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
         ),
       );
     } else {
+      print(response.statusCode);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Échec de l\'envoi du message'),

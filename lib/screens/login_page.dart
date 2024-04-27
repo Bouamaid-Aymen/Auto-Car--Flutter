@@ -21,13 +21,13 @@ class _LoginPageState extends State<LoginPage> {
   bool obscureText = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-            'SE CONNECTER',
-            style: TextStyle(color: Colors.white),
+            'Se connecter',
+            style: TextStyle(color: Colors.blue),
           ),
         ),
         leading: IconButton(
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'NOM D`UTILISATEUR',
+                  hintText: 'Nom d`utilisateur',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
-                  hintText: 'MOT DE PASSE',
+                  hintText: 'Mot de passe ',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   suffixIcon: IconButton(
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'SE CONNECTER',
+                    'Se connecter',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               GestureDetector(
                 onTap: navigateToAddServicePage,
                 child: Text(
-                  'S`INSCRIRE',
+                  'S`inscrire',
                   style: TextStyle(color: Colors.green),
                 ),
               ),
@@ -120,7 +120,8 @@ class _LoginPageState extends State<LoginPage> {
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 201) {
-      showSuccessMessage('Welcom ☻ ');
+      
+      showSuccessMessage('Bienvenu ☻ ');
       print('Information sent successfully!');
       final token = jsonDecode(response.body)["acces token"];
       final userRole = jsonDecode(response.body)["role"];
@@ -140,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
         await Navigator.push(context, route);
       }
     } else {
-      print('Failed to send information. Status code: ${response.statusCode}');
+      print('Échec de l`envoi des informations. Status code: ${response.statusCode}');
       final message = jsonDecode(response.body)["message"];
       showErrorMessage('ERROR: ${message}');
     }

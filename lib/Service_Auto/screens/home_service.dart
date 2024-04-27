@@ -80,18 +80,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditServicePage(
-                          serviceId: service['id'],
-                          fieldName: 'nomS',
-                          fieldValue: service['nomS'],
-                        ),
-                      ),
-                    );
-                  },
                 ),
                 ListTile(
                   title: RichText(

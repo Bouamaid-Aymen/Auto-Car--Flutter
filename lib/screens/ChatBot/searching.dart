@@ -21,21 +21,13 @@ class _ChatbotCar extends State<ChatbotCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(143, 158, 158, 158),
+        backgroundColor: Colors.blue,
         centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Auto ',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'Car',
+              'Mon mécano',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 23,
@@ -47,24 +39,13 @@ class _ChatbotCar extends State<ChatbotCar> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.transparent, // Changer en vert
+          color: Colors.transparent,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-
-                child: Text(
-                  '          ChatBot',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(241, 25, 71, 26),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              
             ),
             Expanded(
               child: _buildUI(),

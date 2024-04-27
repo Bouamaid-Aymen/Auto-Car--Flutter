@@ -43,7 +43,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Changer le mot de passe'),
+        backgroundColor: Colors.blue,
+        title: Center(
+            child: Text(
+          'Changer le mot de passe',
+          style: TextStyle(color: Colors.white),
+        )),
       ),
       body: Container(
         padding: EdgeInsets.all(16),
@@ -118,11 +123,17 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  upPassword(email);
-                },
-                child: Text('Changer le mot de passe',style: TextStyle(color: Colors.white),),
-              ),
+                  onPressed: () {
+                    upPassword(email);
+                  },
+                  child: Text(
+                    'Enregister',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                  )),
             ),
           ],
         ),
@@ -146,12 +157,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 201) {
-      Get.snackbar('succès', 'Modifier password ',backgroundColor: Colors.green,
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('succès', 'Modifier password ',
+          backgroundColor: Colors.green, snackPosition: SnackPosition.BOTTOM);
     } else {
-      Get.snackbar('Errore', ' Password failed',backgroundColor: Colors.red,
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Errore', ' Password failed',
+          backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
     }
   }
 }
-

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  TextEditingController TelController = TextEditingController();
   bool isEdit = false;
 
   @override
@@ -25,8 +26,8 @@ class _RegisterPageState extends State<RegisterPage> {
         automaticallyImplyLeading: false,
         title: Center(
           child: Text(
-            'S`INSCRIRE',
-            style: TextStyle(color: Colors.white),
+            'S`inscrire',
+            style: TextStyle(color: Colors.blue),
           ),
         ),
         leading: IconButton(
@@ -45,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  hintText: 'E-MAIL',
+                  hintText: 'Email',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
@@ -53,15 +54,27 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'NOM D`UTILISATEUR',
+                  hintText: 'Nom d`utilisateur',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.person, color: Colors.blue),
                 ),
               ),
               TextField(
+                controller: TelController,
+                decoration: InputDecoration(
+                  hintText: 'Tel',
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: Icon(Icons.person, color: Colors.blue),
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9_]')),
+                  LengthLimitingTextInputFormatter(8),
+                ],
+              ),
+              TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
-                  hintText: 'MOT DE PASSE',
+                  hintText: 'Mot de passe',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   suffixIcon: IconButton(
@@ -87,7 +100,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('SINGUP'),
+                    child: Text(
+                      'S`inscrire',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               )
@@ -102,7 +118,13 @@ class _RegisterPageState extends State<RegisterPage> {
     final email = emailController.text;
     final username = usernameController.text;
     final password = passwordController.text;
-    final body = {"email": email, "username": username, "password": password};
+    final tel = TelController.text;
+    final body = {
+      "email": email,
+      "username": username,
+      "tel": tel,
+      "password": password
+    };
     const url = "http://localhost:3000/users/register";
     final uri = Uri.parse(url);
     final response = await http.post(
@@ -111,11 +133,12 @@ class _RegisterPageState extends State<RegisterPage> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 201) {
-      showSuccessMessage('Creation Success ☻ ');
+      showSuccessMessage('Succès de la création ☻ ');
       print('Information sent successfully!');
     } else {
-      print('Failed to send information. Status code: ${response.statusCode}');
-      showErrorMessage('Creation failed ');
+      print(
+          'Échec de l`envoi des informations. Status code: ${response.statusCode}');
+      showErrorMessage('La création a échoué ');
     }
   }
 

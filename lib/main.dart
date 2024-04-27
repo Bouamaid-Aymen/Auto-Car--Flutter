@@ -5,7 +5,6 @@ import 'package:my_app_car/screens/ChatBot/const.dart';
 import 'package:my_app_car/screens/splace_screen.dart';
 
 void main() {
-  
   Gemini.init(apiKey: GEMINI_API_KEY);
 
   runApp(MyApp());
@@ -19,12 +18,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Auto Car',
-       theme: ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Colors.blue,
-    hintColor: Colors.blueAccent,
-  
-  ),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.blue,
+        hintColor: Colors.white,
+      ),
       home: Splash_Screen(),
     );
   }

@@ -90,8 +90,10 @@ class _ListeServiceState extends State<ListeService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Center(child: Text('Liste des Services')),
+        title: Center(
+            child: Text(
+          'Liste des Services',
+        )),
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -108,6 +110,7 @@ class _ListeServiceState extends State<ListeService> {
         itemBuilder: (context, index) {
           final service = filteredServices[index];
           return Card(
+            //color: Colors.indigoAccent,
             margin: EdgeInsets.all(8.0),
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -127,7 +130,6 @@ class _ListeServiceState extends State<ListeService> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
                             Text(
                               service['nomS'],
                               style: TextStyle(
@@ -195,37 +197,37 @@ class _ListeServiceState extends State<ListeService> {
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['nomS']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     Text('Email: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['email']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     Text('Nom: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['nomP']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     Text('Téléphone: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['tel']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8),
                                     Text('gouvernorat: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['gouvernorat']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     Text('ville: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['ville']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     Text('description: ',
                                         style: TextStyle(color: Colors.blue)),
                                     Text('${service['description']}',
                                         style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), // Espacement
+                                    SizedBox(height: 8), 
                                     GestureDetector(
                                       onTap: () {
                                         launchUrlString(
@@ -242,11 +244,10 @@ class _ListeServiceState extends State<ListeService> {
                                       child: Text(
                                         '${service['localisation']}',
                                         style: TextStyle(
-                                          color: Color.fromARGB(255, 48, 0, 132),
-                                          fontWeight:
-                                              FontWeight.bold, 
-                                          decoration: TextDecoration
-                                              .underline, 
+                                          color:
+                                              Color.fromARGB(255, 48, 0, 132),
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),

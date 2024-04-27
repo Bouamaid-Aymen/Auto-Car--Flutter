@@ -10,7 +10,7 @@ class Splash_Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey, // Couleur de fond blanche
+      backgroundColor: Colors.blueGrey,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
@@ -98,7 +98,7 @@ class Splash_Screen extends StatelessWidget {
                 child:
                     Text('S`inscrire', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // couleur de fond verte
+                  backgroundColor: Colors.green, 
                 ),
               ),
               SizedBox(width: 10),
@@ -112,7 +112,7 @@ class Splash_Screen extends StatelessWidget {
                 child: Text('Service', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(
-                      228, 153, 61, 61), // couleur de fond orange
+                      228, 153, 61, 61), 
                 ),
               ),
             ],
