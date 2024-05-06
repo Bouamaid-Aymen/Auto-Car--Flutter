@@ -12,16 +12,16 @@ class Splash_Screen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Auto ',
                 style: TextStyle(
                   color: Colors.blue,
-                  fontSize: 23,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -29,14 +29,22 @@ class Splash_Screen extends StatelessWidget {
                 'Car',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 23,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
+          Text(
+            "Version 0.9 Beta",
+            style: TextStyle(
+              color: Color.fromARGB(166, 0, 0, 0),
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           Expanded(
-            flex: 9,
+            flex: 7,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,18 +58,20 @@ class Splash_Screen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 4),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce rutrum orci vel nunc pellentesque volutpat. Etiam eu placerat nunc. Integer nibh urna, iaculis nec tempus non, mollis ac lacus. Suspendisse condimentum semper turpis tincidunt consequat. Donec",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                      child: Center(
+                        child: Text(
+                          "L'application AUTOCAR révolutionne la gestion de l'entretien automobile en combinant des technologies innovantes et des fonctionnalités intuitives. Anticipez les problèmes, trouvez des mécaniciens de confiance et suivez l'historique d'entretien de votre véhicule pour une expérience de conduite optimale",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     )
@@ -71,52 +81,63 @@ class Splash_Screen extends StatelessWidget {
             ),
           ),
           Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child:
-                    Text('Se connecter', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // couleur de fond bleue
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: Text('Se connecter',
+                      style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                child:
-                    Text('S`inscrire', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, 
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterPage()),
+                    );
+                  },
+                  child:
+                      Text('S`inscrire', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddServicePage()),
-                  );
-                },
-                child: Text('Service', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(
-                      228, 153, 61, 61), 
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddServicePage()),
+                    );
+                  },
+                  child: Text('Service', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(228, 153, 61, 61),
+                  ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 4),
+          const SizedBox(height: 20),
+          Text(
+            "Email: autocar@gmail.com Numéro: 54447844\n       © 2024 Auto CAR. Tous droits réservé",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ]),
       ),
     );

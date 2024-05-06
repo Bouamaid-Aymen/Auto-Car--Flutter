@@ -177,7 +177,7 @@ class _ListeServiceState extends State<ListeService> {
                               color: Colors.green,
                             ),
                             SizedBox(width: 8),
-                            Text('OUI', style: TextStyle(color: Colors.green)),
+                            Text('VÉRIFIÉ', style: TextStyle(color: Colors.green)),
                           ],
                         ),
                       ),

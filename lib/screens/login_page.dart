@@ -21,15 +21,33 @@ class _LoginPageState extends State<LoginPage> {
   bool obscureText = true;
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(
-            'Se connecter',
-            style: TextStyle(color: Colors.blue),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Auto ',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Car',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
+        
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -37,67 +55,90 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  hintText: 'Nom d`utilisateur',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.person, color: Colors.blue),
-                ),
-                onChanged: (value) {},
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  hintText: 'Mot de passe ',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscureText ? Icons.visibility : Icons.visibility_off,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/logooo.jpg"),
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Se connecter ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.white,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        obscureText = !obscureText;
-                      });
-                    },
                   ),
                 ),
-                keyboardType: TextInputType.text,
-                obscureText: obscureText,
-                onChanged: (value) {},
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => LoginApi(),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
+                TextField(
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    hintText: 'Nom d`utilisateur',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  ),
+                  onChanged: (value) {},
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                SizedBox(height: 10),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    hintText: 'Mot de passe ',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                  obscureText: obscureText,
+                  onChanged: (value) {},
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => LoginApi(),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Se connecter',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                GestureDetector(
+                  onTap: navigateToAddServicePage,
                   child: Text(
-                    'Se connecter',
-                    style: TextStyle(color: Colors.white),
+                    'S`inscrire',
+                    style: TextStyle(color: Colors.green),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              GestureDetector(
-                onTap: navigateToAddServicePage,
-                child: Text(
-                  'S`inscrire',
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -120,7 +161,6 @@ class _LoginPageState extends State<LoginPage> {
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 201) {
-      
       showSuccessMessage('Bienvenu ☻ ');
       print('Information sent successfully!');
       final token = jsonDecode(response.body)["acces token"];
@@ -141,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
         await Navigator.push(context, route);
       }
     } else {
-      print('Échec de l`envoi des informations. Status code: ${response.statusCode}');
+      print(
+          'Échec de l`envoi des informations. Status code: ${response.statusCode}');
       final message = jsonDecode(response.body)["message"];
       showErrorMessage('ERROR: ${message}');
     }

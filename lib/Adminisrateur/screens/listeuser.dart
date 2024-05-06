@@ -13,6 +13,8 @@ class userListPage extends StatefulWidget {
 class _userListPageState extends State<userListPage> {
   bool isLoading = true;
   List items = [];
+  List filteredItems = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -22,7 +24,6 @@ class _userListPageState extends State<userListPage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchuser();
     return Scaffold(
       drawer: NavBarAdmin(),
       appBar: AppBar(
@@ -39,51 +40,89 @@ class _userListPageState extends State<userListPage> {
             ],
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                filteredItems = items;
+                searchController.clear();
+              });
+            },
+            icon: Icon(Icons.clear),
+          ),
+        ],
       ),
       body: Visibility(
         visible: isLoading,
         child: Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: fetchuser,
-          child: ListView.builder(
-            itemCount: items.length,
-            padding: EdgeInsets.all(12),
-            itemBuilder: (context, index) {
-              final item = items[index] as Map;
-              final id = '${item['id']}';
-
-              return Card(
-                child: ListTile(
-                  leading: Icon(Icons.account_circle_sharp, color: Colors.blue),
-                  title: Text(
-                    'Username:${item['username']}      Email : ${item['email']}',
-                    style: TextStyle(color: Colors.blue),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    labelText: "Rechercher par rôle ou nom",
+                    border: OutlineInputBorder(),
                   ),
-                  subtitle: Text('    Role: ${item['role']}'),
-                  trailing: PopupMenuButton(onSelected: (value) {
-                    if (value == 'delete') {
-                      deleteById(id);
-                    }
-                  }, itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text(
-                              'SUPPRIMER',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ],
-                        ),
-                        value: 'delete',
-                      ),
-                    ];
-                  }),
+                  onChanged: (value) {
+                    setState(() {
+                      filteredItems = items.where((item) =>
+                          (item['role'] as String)
+                              .toLowerCase()
+                              .contains(value.toLowerCase()) ||
+                          (item['username'] as String)
+                              .toLowerCase()
+                              .contains(value.toLowerCase())).toList();
+                    });
+                  },
                 ),
-              );
-            },
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredItems.length,
+                  padding: EdgeInsets.all(12),
+                  itemBuilder: (context, index) {
+                    final item = filteredItems[index] as Map;
+                    final id = '${item['id']}';
+
+                    return Card(
+                      child: ListTile(
+                        leading: Icon(Icons.account_circle_sharp, color: Colors.blue),
+                        title: Text(
+                          'Username:${item['username']}      Email : ${item['email']}',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        subtitle: Text('    Role: ${item['role']}'),
+                        trailing: PopupMenuButton(onSelected: (value) {
+                          if (value == 'delete') {
+                            deleteById(id);
+                          }
+                        }, itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete, color: Colors.red),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'SUPPRIMER',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                              value: 'delete',
+                            ),
+                          ];
+                        }),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,6 +134,7 @@ class _userListPageState extends State<userListPage> {
     if (response != null) {
       setState(() {
         items = response;
+        filteredItems = items;
       });
     } else {
       showErroMessage(context, message: 'Something went wrong');
@@ -135,6 +175,7 @@ class _userListPageState extends State<userListPage> {
         final filtered = items.where((element) => element['id'] != id).toList();
         setState(() {
           items = filtered;
+          filteredItems = items;
         });
       } else {
         showErroMessage(context, message: "La suppression a échoué");

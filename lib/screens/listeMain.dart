@@ -30,9 +30,7 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
       setState(() {
         maintenanceList = jsonDecode(response.body);
       });
-    } else {
-      // Handle error
-    }
+    } else {}
   }
 
   Future<void> deleteMaintenance(int id) async {
@@ -59,11 +57,11 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
                 if (response.statusCode == 200) {
                   fetchData();
                   showSuccessMessage(context,
-                      message: 'Voyant supprimé avec succès');
+                      message: 'Maintenance supprimé avec succès');
                 } else {
                   print(response.body);
                   showErroMessage(context,
-                      message: 'Échec de la suppression du voyant');
+                      message: 'Échec de la suppression du Maintenance ');
                 }
               },
               child: Text('Confirmer'),
@@ -76,6 +74,7 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchData;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 60, 0, 129),

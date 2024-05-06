@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:my_app_car/Service_Auto/NavBar_Service.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 
-
 class ServiceListPage extends StatefulWidget {
   @override
   _ServiceListPageState createState() => _ServiceListPageState();
@@ -71,13 +70,33 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Nom de service: ',
-                          style: TextStyle(color: Colors.blue),
+                          text: 'Nom de service : ',
+                          style: TextStyle(color: Colors.grey),
                         ),
                         TextSpan(
                           text: service['nomS'],
+                          style: TextStyle(color: Colors.grey),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                Center(
+                  child: ListTile(
+                    title: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Compte : ',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          TextSpan(
+                            text: service['verifier'],
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -87,7 +106,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Nom et Prénom de personne: ',
+                          text: 'Nom : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -115,7 +134,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Téléphone: ',
+                          text: 'Téléphone : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -143,7 +162,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Gouvernorat ',
+                          text: 'Gouvernorat : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -171,7 +190,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Ville ',
+                          text: 'Ville : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -199,7 +218,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Description ',
+                          text: 'Description : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -227,7 +246,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       style: DefaultTextStyle.of(context).style,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Localisation ',
+                          text: 'Localisation : ',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(
@@ -248,28 +267,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       ),
                     );
                   },
-                ),
-
-
-                
-                Center(
-                  child: ListTile(
-                    title: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context).style,
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Vérifié: ',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                          TextSpan(
-                            text: service['verifier'],
-                          ),
-                        ],
-                      ),
-                    ),
-                    
-                  ),
                 ),
               ],
             ),

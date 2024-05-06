@@ -45,164 +45,206 @@ class _AddServicePageState extends State<AddServicePage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(
-            'Ajouter des services',
-            style: TextStyle(color: Colors.blue),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Auto ',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Car',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: 'Nom *',
-                prefixIcon: Icon(Icons.person, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/service.jpg"),
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
             ),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email *',
-                prefixIcon: Icon(Icons.email, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                labelText: 'Mot de passe *',
-                prefixIcon: Icon(Icons.lock, color: Colors.blue),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.blue,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Services ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  onPressed: _togglePasswordVisibility,
                 ),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-              obscureText: _obscureText,
-            ),
-            TextFormField(
-              controller: phoneController,
-              maxLength: 8,
-              decoration: InputDecoration(
-                labelText: 'Téléphone *',
-                prefixIcon: Icon(Icons.phone, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Veuillez saisir votre numéro de téléphone';
-                } else if (value.length != 8) {
-                  return 'Le numéro de téléphone doit être composé de 8 chiffres';
-                }
-                return null;
-              },
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedGovernorate,
-              onChanged: (value) {
-                setState(() {
-                  selectedGovernorate = value!;
-                  selectedCity = citiesByGovernorate[value]![0];
-                  selectedGovernorateController.text = value;
-                  selectedCityController.text = selectedCity;
-                });
-              },
-              items: governorates.map((governorate) {
-                return DropdownMenuItem<String>(
-                  value: governorate,
-                  child: Text(governorate),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Gouvernorat *',
-                labelStyle: TextStyle(color: Colors.white),
-                prefixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.maps_home_work, color: Colors.blue),
-                    SizedBox(width: 8),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nom *',
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email *',
+                    prefixIcon: Icon(Icons.email, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Mot de passe *',
+                    prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.blue,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                    ),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  obscureText: _obscureText,
+                ),
+                TextFormField(
+                  controller: phoneController,
+                  maxLength: 8,
+                  decoration: InputDecoration(
+                    labelText: 'Téléphone *',
+                    prefixIcon: Icon(Icons.phone, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
                   ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Veuillez saisir votre numéro de téléphone';
+                    } else if (value.length != 8) {
+                      return 'Le numéro de téléphone doit être composé de 8 chiffres';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedCity,
-              onChanged: (value) {
-                setState(() {
-                  selectedCity = value!;
-                  selectedCityController.text = value;
-                });
-              },
-              items: citiesByGovernorate[selectedGovernorate]!.map((city) {
-                return DropdownMenuItem<String>(
-                  value: city,
-                  child: Text(city),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Ville *',
-                prefixIcon: Icon(Icons.apartment_sharp, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextField(
-              controller: serviceNameController,
-              decoration: InputDecoration(
-                labelText: 'Service *',
-                prefixIcon:
-                    Icon(Icons.assignment_ind_sharp, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextField(
-              controller: DescriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description *',
-                prefixIcon: Icon(Icons.description, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextField(
-              controller: localisationController,
-              decoration: InputDecoration(
-                labelText: 'Localisation (lien google maps)',
-                prefixIcon: Icon(Icons.map_rounded, color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                launchUrlString(
-                    'https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu');
-              },
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                addService();
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(1),
-                backgroundColor: Colors.blue,
-              ),
-              child: Text(
-                'Ajouter le service',
-                style: TextStyle(
-                  color: Colors.white,
+                DropdownButtonFormField<String>(
+                  value: selectedGovernorate,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGovernorate = value!;
+                      selectedCity = citiesByGovernorate[value]![0];
+                      selectedGovernorateController.text = value;
+                      selectedCityController.text = selectedCity;
+                    });
+                  },
+                  items: governorates.map((governorate) {
+                    return DropdownMenuItem<String>(
+                      value: governorate,
+                      child: Text(governorate),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(
+                    labelText: 'Gouvernorat *',
+                    labelStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.maps_home_work, color: Colors.blue),
+                        SizedBox(width: 8),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                DropdownButtonFormField<String>(
+                  value: selectedCity,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCity = value!;
+                      selectedCityController.text = value;
+                    });
+                  },
+                  items: citiesByGovernorate[selectedGovernorate]!.map((city) {
+                    return DropdownMenuItem<String>(
+                      value: city,
+                      child: Text(city),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(
+                    labelText: 'Ville *',
+                    prefixIcon: Icon(Icons.apartment_sharp, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextField(
+                  controller: serviceNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Service *',
+                    prefixIcon:
+                        Icon(Icons.assignment_ind_sharp, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextField(
+                  controller: DescriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Description *',
+                    prefixIcon: Icon(Icons.description, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextField(
+                  controller: localisationController,
+                  decoration: InputDecoration(
+                    labelText: 'Localisation (lien google maps)',
+                    prefixIcon: Icon(Icons.map_rounded, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    launchUrlString(
+                        'https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu');
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    addService();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(1),
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text(
+                    'Ajouter le service',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -432,31 +474,28 @@ class _AddServicePageState extends State<AddServicePage> {
       'Médenine',
       'Ben Gardane',
       'Zarzis',
-      'Djerba Houmt Souk',
-      'Djerba Midoun',
-      'Djerba Ajim',
-      'Sidi Makhlouf',
-      'Béni Khedache'
+      'Djerba',
+      'Houmt Souk',
+      'Midoun',
+      'Ajim'
     ],
     'Tataouine': [
       'Tataouine',
       'Ghomrassen',
-      'Bir Lahmar',
-      'Dhehiba',
+      'Dhiba',
       'Remada',
+      'Bir Lahmar',
+      'Smar',
       'Tataouine Sud'
     ],
     'Gafsa': [
       'Gafsa',
       'Métlaoui',
+      'Moularès',
       'Redeyef',
-      'El Guettar',
-      'Moulares',
       'Belkhir',
-      'Om Larayes',
-      'Sened',
-      'Sidi Aïch',
-      'Mdhilla'
-    ]
+      'El Guettar',
+      'El Ksar'
+    ],
   };
 }

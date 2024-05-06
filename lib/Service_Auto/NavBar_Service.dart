@@ -70,7 +70,7 @@ class NavBarS extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.message,
-              color: Color.fromARGB(255, 56, 10, 220),
+              color: Colors.indigo,
             ),
             title: Text('Boite de messagerie'),
             onTap: () async {

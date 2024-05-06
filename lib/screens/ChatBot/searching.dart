@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
 class ChatbotCar extends StatefulWidget {
-  const ChatbotCar({super.key});
+  const ChatbotCar({Key? key}) : super(key: key);
 
   @override
   State<ChatbotCar> createState() => _ChatbotCar();
@@ -16,12 +16,13 @@ class _ChatbotCar extends State<ChatbotCar> {
   ChatUser currentUser = ChatUser(id: "0", firstName: "User");
   ChatUser geminiUser = ChatUser(id: "1", firstName: "Assistant");
 
-  @override
+  bool examplesDisplayed = false; 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color.fromARGB(62, 26, 72, 156),
         centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -39,14 +40,29 @@ class _ChatbotCar extends State<ChatbotCar> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          image: DecorationImage(
+            image: AssetImage("assets/images/chachat.png"),
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-            ),
+            if (!examplesDisplayed)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    "Exemples de questions que vous pouvez poser :\n- Quand dois-je changer l'huile de ma voiture ?\n- Comment vérifier la pression des pneus ?\n- Quels sont les voyants d'alerte les plus courants sur le tableau de bord ?",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             Expanded(
               child: _buildUI(),
             ),
@@ -62,8 +78,7 @@ class _ChatbotCar extends State<ChatbotCar> {
       onSend: _sendMessage,
       messages: messages,
       inputOptions: InputOptions(
-        inputTextStyle:
-            TextStyle(color: Colors.black), // Couleur du texte saisi
+        inputTextStyle: TextStyle(color: Colors.black),
       ),
     );
   }
@@ -71,6 +86,7 @@ class _ChatbotCar extends State<ChatbotCar> {
   void _sendMessage(ChatMessage chatMessage) {
     setState(() {
       messages = [chatMessage, ...messages];
+      examplesDisplayed = true; 
     });
 
     try {
@@ -80,7 +96,8 @@ class _ChatbotCar extends State<ChatbotCar> {
         if (lastMessage != null && lastMessage.user == geminiUser) {
           lastMessage = messages.removeAt(0);
           String response = event.content!.parts?.fold(
-                  "", (previous, current) => "$previous ${current.text}") ??
+                "", (previous, current) => "$previous ${current.text}",
+              ) ??
               "";
           lastMessage.text += response;
           setState(() {
@@ -88,7 +105,8 @@ class _ChatbotCar extends State<ChatbotCar> {
           });
         } else {
           String response = event.content!.parts?.fold(
-                  "", (previous, current) => "$previous ${current.text}") ??
+                "", (previous, current) => "$previous ${current.text}",
+              ) ??
               "";
           ChatMessage message = ChatMessage(
             user: geminiUser,

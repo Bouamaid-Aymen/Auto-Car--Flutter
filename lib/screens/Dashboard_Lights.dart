@@ -49,62 +49,64 @@ class _UserPageState extends State<UserPage> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: '   Rechercher',
-                prefixIcon: Icon(Icons.search),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: '   Rechercher',
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    filteredVoyants = voyants
+                        .where((voyant) => voyant.nom
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  filteredVoyants = voyants
-                      .where((voyant) => voyant.nom
-                          .toLowerCase()
-                          .contains(value.toLowerCase()))
-                      .toList();
-                });
-              },
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredVoyants.length,
-              itemBuilder: (context, index) {
-                String imagePath = filteredVoyants[index].image.split('/').last;
-                List<String> parts = imagePath.split('\\');
-                String imageName = parts.last;
-
-                return Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        filteredVoyants[index].nom,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(filteredVoyants[index].description),
-                      leading: Container(
-                        width: 50.0,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('assets/images/$imageName'),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredVoyants.length,
+                itemBuilder: (context, index) {
+                  String imagePath = filteredVoyants[index].image.split('/').last;
+                  List<String> parts = imagePath.split('\\');
+                  String imageName = parts.last;
+        
+                  return Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          filteredVoyants[index].nom,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(filteredVoyants[index].description),
+                        leading: Container(
+                          width: 50.0,
+                          height: 50.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/$imageName'),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Divider(),
-                  ],
-                );
-              },
+                      Divider(),
+                    ],
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/ChatBot/searching.dart';
+import 'package:my_app_car/screens/Contact.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
+import 'package:my_app_car/screens/boitMessageU.dart';
 import 'package:my_app_car/screens/listservice.dart';
 import 'package:my_app_car/screens/login_page.dart';
 import 'package:my_app_car/screens/my_car.dart';
@@ -68,7 +70,7 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.warning, color: Colors.blue),
+            leading: Icon(Icons.warning, color: Colors.white),
             title: Text(
               'Les voyants',
             ),
@@ -104,6 +106,18 @@ class NavBar extends StatelessWidget {
               );
             },
           ),
+          
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.message_rounded, color: Colors.indigo),
+            title: Text('Contact'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MessagePage()),
+              );
+            },
+          ),
           Divider(),
           ListTile(
             leading: Icon(Icons.settings, color: Colors.grey),
@@ -114,14 +128,6 @@ class NavBar extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Setting()),
               );
             },
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.contact_emergency, color: Colors.blue),
-            title: Text(
-              'Contact',
-            ),
-            onTap: () {},
           ),
           Divider(),
           ListTile(

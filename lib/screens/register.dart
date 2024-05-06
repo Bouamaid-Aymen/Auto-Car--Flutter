@@ -23,11 +23,29 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Center(
-          child: Text(
-            'S`inscrire',
-            style: TextStyle(color: Colors.blue),
+         title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Auto ',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Car',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
         leading: IconButton(
@@ -37,77 +55,100 @@ class _RegisterPageState extends State<RegisterPage> {
           },
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.person, color: Colors.blue),
-                ),
-              ),
-              TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  hintText: 'Nom d`utilisateur',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.person, color: Colors.blue),
-                ),
-              ),
-              TextField(
-                controller: TelController,
-                decoration: InputDecoration(
-                  hintText: 'Tel',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.person, color: Colors.blue),
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9_]')),
-                  LengthLimitingTextInputFormatter(8),
-                ],
-              ),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  hintText: 'Mot de passe',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscureText ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        obscureText = !obscureText;
-                      });
-                    },
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                obscureText: obscureText,
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: registerApi,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'S`inscrire',
-                      style: TextStyle(color: Colors.white),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/logooo.jpg"),
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'S`inscrire ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  ),
                 ),
-              )
-            ],
+                TextField(
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    hintText: 'Nom d`utilisateur',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  ),
+                ),
+                TextField(
+                  controller: TelController,
+                  decoration: InputDecoration(
+                    hintText: 'Tel',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9_]')),
+                    LengthLimitingTextInputFormatter(8),
+                  ],
+                ),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    hintText: 'Mot de passe',
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  obscureText: obscureText,
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: registerApi,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'S`inscrire',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -230,12 +230,12 @@ class _CarMaintenancePageState extends State<CarMaintenancePage> {
       personneOperationController.text = "";
       modificationsController.text = "";
       autreController.text = "";
-      showSuccessMessage(context, message: 'SAVED  ');
+      showSuccessMessage(context, message: 'Enregistrer avec succés  ');
     } else {
       print(response.statusCode);
       print(response.body);
 
-      showErroMessage(context, message: 'Failed');
+      showErroMessage(context, message: 'Échoué');
     }
   }
 }

@@ -14,7 +14,6 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
   String selectedGovernorate = 'Nabeul';
   String selectedCity = 'Soliman';
   TextEditingController messageController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -31,7 +30,7 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
         if (selectedGovernorate != 'Nabeul' || selectedCity != 'Soliman') {
           services = allServices
               .where((service) =>
-                  service['verifier'] == 'OUI' &&
+                  service['verifier'] == 'VÉRIFIÉ' &&
                   service['gouvernorat'] == selectedGovernorate &&
                   service['ville'] == selectedCity &&
                   service['nomS'].toLowerCase().contains(query.toLowerCase()))
@@ -39,7 +38,7 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
         } else {
           services = allServices
               .where((service) =>
-                  service['verifier'] == 'OUI' &&
+                  service['verifier'] == 'VÉRIFIÉ' &&
                   service['nomS'].toLowerCase().contains(query.toLowerCase()))
               .toList();
         }
@@ -230,14 +229,19 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text(
-                                              'Envoyer un message ( Entrer votre numero pour contacter ) '),
-                                          content: TextField(
-                                            controller: messageController,
-                                            decoration: InputDecoration(
-                                              hintText:
-                                                  'Entrez votre message ici...',
-                                            ),
-                                            maxLines: null,
+                                              'Envoyer un message '),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                controller: messageController,
+                                                decoration: InputDecoration(
+                                                  hintText:
+                                                      'Entrez votre message ici...',
+                                                ),
+                                                maxLines: null,
+                                              ),
+                                            ],
                                           ),
                                           actions: <Widget>[
                                             TextButton(
@@ -280,22 +284,24 @@ class _ServiceListUPageState extends State<ServiceListUPage> {
       String emailU, int serviceId) async {
     final message = messageController.text;
     final body = {
-      "message": "dsgfsdgdfsg",
+      "message": message,
       "usernameU": username,
+
       "email": service['email'],
       "nom_service": service['nomS'],
       "emailU": emailU,
       "idUser": serviceId
     };
+    print(body);
 
     String? token = await TokenStorage.getToken();
-    const url = 'http://localhost:3000/users/message';
+    const url = 'http://localhost:3000/users/messages';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(body), headers: {
       'Content-Type': 'application/json',
       'authorization': 'Bearer $token'
     });
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 500) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Message envoyé avec succès'),

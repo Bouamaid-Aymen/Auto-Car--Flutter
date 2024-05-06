@@ -33,15 +33,14 @@ class Message {
   }
 }
 
-class MessageListPage extends StatefulWidget {
+class MessagePage extends StatefulWidget {
   @override
-  _MessageListPageState createState() => _MessageListPageState();
+  _MessagePageState createState() => _MessagePageState();
 }
 
-class _MessageListPageState extends State<MessageListPage> {
+class _MessagePageState extends State<MessagePage> {
   TextEditingController messageController = TextEditingController();
   late Future<List<Message>> futureMessages;
-  List<dynamic> services = [];
 
   @override
   void initState() {
@@ -56,7 +55,7 @@ class _MessageListPageState extends State<MessageListPage> {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<Message> messages = data
-          .where((json) => json['email'].toLowerCase() == email.toLowerCase())
+          .where((json) => json['emailU'].toLowerCase() == email.toLowerCase())
           .map((json) => Message.fromJson(json))
           .toList();
       return messages;
@@ -65,49 +64,14 @@ class _MessageListPageState extends State<MessageListPage> {
     }
   }
 
-  Future<void> Reponsemessage(Message message) async {
-    final body = {
-      "message": messageController.text,
-      "usernameU": TokenStorage.getUsername(),
-      "email": TokenStorage.getEmail(),
-      "nom_service": message.nomService,
-      "emailU": message.emailU,
-      "idUser": 1,
-      "idservice": 5,
-    };
-
-    String? token = await TokenStorage.getToken();
-    const url = 'http://localhost:3000/users/message';
-    final uri = Uri.parse(url);
-    final response = await http.post(uri, body: jsonEncode(body), headers: {
-      'Content-Type': 'application/json',
-      'authorization': 'Bearer $token'
+  void updateMessagesList() {
+    setState(() {
+      futureMessages = fetchMessages();
     });
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Message envoyé avec succès'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      // Mettre à jour la liste des messages
-      setState(() {
-        futureMessages = fetchMessages();
-      });
-    } else {
-      print(response.statusCode);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Échec de l\'envoi du message'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchMessages();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -127,27 +91,23 @@ class _MessageListPageState extends State<MessageListPage> {
           } else {
             List<Message> messages = snapshot.data!;
             return ListView.builder(
-              itemCount: messages.length * 2 - 1,
+              itemCount: messages.length,
               itemBuilder: (context, index) {
-                if (index.isOdd) {
-                  return Divider();
-                }
-                final messageIndex = index ~/ 2;
-                Message message = messages[messageIndex];
+                Message message = messages[index];
                 return ListTile(
                   title: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Message envoyer par : ',
+                          text: 'Contacter : ',
                           style: TextStyle(
                             color: Colors.indigo,
                             fontSize: 20,
                           ),
                         ),
                         TextSpan(
-                          text: '${message.usernameU}',
+                          text: '${message.nomService}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -167,7 +127,7 @@ class _MessageListPageState extends State<MessageListPage> {
                           ),
                         ),
                         TextSpan(
-                          text: '${message.message}',
+                          text: '${message.message}\n',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -177,7 +137,7 @@ class _MessageListPageState extends State<MessageListPage> {
                     ),
                   ),
                   trailing: IconButton(
-                    icon: Icon(Icons.reply),
+                    icon: Icon(Icons.message_outlined),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -194,7 +154,12 @@ class _MessageListPageState extends State<MessageListPage> {
                               ElevatedButton(
                                 child: Text('Envoyer'),
                                 onPressed: () {
-                                  Reponsemessage(message);
+                                  Reponsemessage(
+                                    message.usernameU,
+                                    message.nomService,
+                                    message.emailU,
+                                    message.idUser,
+                                  );
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -216,5 +181,47 @@ class _MessageListPageState extends State<MessageListPage> {
         },
       ),
     );
+  }
+
+  Future<void> Reponsemessage(
+    String username,
+    String nomService,
+    String emailU,
+    num serviceId,
+  ) async {
+    final message = messageController.text;
+    final body = {
+      "message": message,
+      "usernameU": username,
+      "email": emailU,
+      "nom_service": nomService,
+      "emailU": emailU,
+      "idUser": serviceId
+    };
+
+    String? token = await TokenStorage.getToken();
+    const url = 'http://localhost:3000/users/messages';
+    final uri = Uri.parse(url);
+    final response = await http.post(uri, body: jsonEncode(body), headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer $token'
+    });
+    if (response.statusCode == 201 || response.statusCode == 500) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Message envoyé avec succès'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      updateMessagesList(); 
+    } else {
+      print(response.statusCode);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Échec de l\'envoi du message'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
