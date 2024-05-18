@@ -22,30 +22,31 @@ class _ChatbotCar extends State<ChatbotCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(62, 26, 72, 156),
         centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Mon mécano',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+       title: Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+     Text(
+      'Mon Mécano',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 23,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    SizedBox(width: 10), 
+    Icon(Icons.engineering, color: Colors.cyan), 
+  ],
+),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        /*decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/chachat.png"),
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
-        ),
+        ),*/
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,7 +57,7 @@ class _ChatbotCar extends State<ChatbotCar> {
                   child: Text(
                     "Exemples de questions que vous pouvez poser :\n- Quand dois-je changer l'huile de ma voiture ?\n- Comment vérifier la pression des pneus ?\n- Quels sont les voyants d'alerte les plus courants sur le tableau de bord ?",
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.cyan,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),

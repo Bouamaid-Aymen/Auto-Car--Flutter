@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_car/screens/Car_list.dart';
 import 'package:my_app_car/screens/ChatBot/searching.dart';
-import 'package:my_app_car/screens/Contact.dart';
 import 'package:my_app_car/screens/Dashboard_Lights.dart';
 import 'package:my_app_car/screens/boitMessageU.dart';
 import 'package:my_app_car/screens/listservice.dart';

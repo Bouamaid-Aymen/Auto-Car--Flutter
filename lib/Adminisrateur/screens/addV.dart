@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +13,8 @@ class AddDashboardLightPage extends StatefulWidget {
 class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  String? selectedCritique;
+
   File? _image;
   List<Voyant> voyants = [];
 
@@ -38,12 +39,12 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchVoyants();
+     fetchVoyants();
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-            'Liste des voyants ',
+            'Liste des voyants',
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -74,6 +75,25 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
               decoration: InputDecoration(
                 labelText: 'Description',
               ),
+            ),
+            SizedBox(height: 20.0),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                labelText: 'Critique/Non Critique',
+              ),
+              value: selectedCritique,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCritique = newValue;
+                });
+              },
+              items: <String>['Critique', 'Non Critique']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
@@ -111,31 +131,37 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(voyants[index].nom),
-                    subtitle: TextButton.icon(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                'Description',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              content: Text(voyants[index].description),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Fermer'),
-                                ),
-                              ],
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Description',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  content: Text(voyants[index].description),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Fermer'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                      icon: Icon(Icons.info),
-                      label: Text('Description'),
+                          icon: Icon(Icons.info),
+                          label: Text('Description'),
+                        ),
+                        Text(voyants[index].critique),
+                      ],
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -180,8 +206,14 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
   Future<void> addV() async {
     final name = nameController.text;
     final description = descriptionController.text;
+    final critique = selectedCritique;
     final imageName = _image != null ? _image!.path.split('/').last : '';
-    final body = {"nom": name, "description": description, "image": imageName};
+    final body = {
+      "nom": name,
+      "description": description,
+      "critique": critique,
+      "image": imageName
+    };
     final uri = Uri.parse("http://localhost:3000/car/voyant");
     final response = await http.post(
       uri,
@@ -191,7 +223,6 @@ class _AddDashboardLightPageState extends State<AddDashboardLightPage> {
     print(response.body);
     if (response.statusCode == 201) {
       showSuccessMessage(context, message: "Création validée");
-
       fetchVoyants();
     } else {
       print(response.statusCode);
@@ -255,12 +286,14 @@ class Voyant {
   final int id;
   final String nom;
   final String description;
+  final String critique;
   final String image;
 
   Voyant({
     required this.id,
     required this.nom,
     required this.description,
+    required this.critique,
     required this.image,
   });
 
@@ -269,6 +302,7 @@ class Voyant {
       id: json['id'],
       nom: json['nom'],
       description: json['description'],
+      critique: json['critique'],
       image: json['image'],
     );
   }
@@ -286,6 +320,7 @@ class EditVoyantPage extends StatefulWidget {
 class _EditVoyantPageState extends State<EditVoyantPage> {
   late TextEditingController nameController;
   late TextEditingController descriptionController;
+  String? selectedCritique;
 
   @override
   void initState() {
@@ -293,6 +328,7 @@ class _EditVoyantPageState extends State<EditVoyantPage> {
     nameController = TextEditingController(text: widget.voyant.nom);
     descriptionController =
         TextEditingController(text: widget.voyant.description);
+    selectedCritique = widget.voyant.critique;
   }
 
   @override
@@ -309,7 +345,7 @@ class _EditVoyantPageState extends State<EditVoyantPage> {
             TextField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: 'Nom du voyant',
+                labelText: 'Nom',
               ),
             ),
             SizedBox(height: 20.0),
@@ -320,11 +356,34 @@ class _EditVoyantPageState extends State<EditVoyantPage> {
               ),
             ),
             SizedBox(height: 20.0),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                labelText: 'Critique/Non Critique',
+              ),
+              value: selectedCritique,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCritique = newValue;
+                });
+              },
+              items: <String>['Critique', 'Non Critique']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                modifierV(widget.voyant.id);
+                updateVoyant(widget.voyant.id);
               },
-              child: Text('Modifier Voyant'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+              ),
+              child: Text('Mettre à jour'),
             ),
           ],
         ),
@@ -332,29 +391,27 @@ class _EditVoyantPageState extends State<EditVoyantPage> {
     );
   }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-
-  Future<void> modifierV(int id) async {
-    final nom = nameController.text;
+  Future<void> updateVoyant(int id) async {
+    final name = nameController.text;
     final description = descriptionController.text;
-    final body = {"nom": nom, "description": description};
-    final url = "http://localhost:3000/car/$id/voyant";
-    final uri = Uri.parse(url);
+    final critique = selectedCritique;
+    final uri = Uri.parse('http://localhost:3000/car/$id/voyant');
+    final body = jsonEncode({
+      'nom': name,
+      'description': description,
+      'critique': critique,
+    });
     final response = await http.patch(
       uri,
-      body: jsonEncode(body),
+      body: body,
       headers: {'Content-Type': 'application/json'},
     );
+
     if (response.statusCode == 200) {
-      showSuccessMessage(context, message: "Modification validée");
+      Navigator.pop(context);
+      showSuccessMessage(context, message: 'Voyant mis à jour avec succès');
     } else {
-      print(response.statusCode);
-      showErroMessage(context, message: "Échec de la modification");
+      showErroMessage(context, message: 'Échec de la mise à jour du voyant');
     }
   }
 }

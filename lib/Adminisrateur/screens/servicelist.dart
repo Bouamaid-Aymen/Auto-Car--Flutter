@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class ListeService extends StatefulWidget {
   @override
@@ -30,6 +32,23 @@ class _ListeServiceState extends State<ListeService> {
       });
     } else {
       print('Failed to load services');
+    }
+  }
+
+  Future<void> sendVerificationEmail(String userEmail) async {
+    final smtpServer = gmail('autocarpfe@gmail.com', 'lsfy yxha eutq mchg');
+
+    final message = Message()
+      ..from = Address('autocarpfe@gmail.com', 'AutoCar App')
+      ..recipients.add(userEmail)
+      ..subject = 'Confirmation dans l\'application AutoCar'
+      ..text = 'Vous avez été accepté dans l\'application AutoCar.';
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } catch (e) {
+      print('Error sending email: $e');
     }
   }
 
@@ -66,11 +85,12 @@ class _ListeServiceState extends State<ListeService> {
     }
   }
 
-  Future<void> verifyService(int id) async {
+  Future<void> verifyService(int id, String userEmail) async {
     final url = Uri.parse('http://localhost:3000/car/$id/service');
     final response = await http.patch(url);
 
     if (response.statusCode == 200) {
+      await sendVerificationEmail(userEmail);
       fetchServices();
     } else {
       print('Failed to verify service');
@@ -110,7 +130,6 @@ class _ListeServiceState extends State<ListeService> {
         itemBuilder: (context, index) {
           final service = filteredServices[index];
           return Card(
-            //color: Colors.indigoAccent,
             margin: EdgeInsets.all(8.0),
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -169,7 +188,8 @@ class _ListeServiceState extends State<ListeService> {
                       ),
                       SizedBox(width: 8),
                       TextButton(
-                        onPressed: () => verifyService(service['id']),
+                        onPressed: () =>
+                            verifyService(service['id'], service['email']),
                         child: Row(
                           children: [
                             Icon(
@@ -177,7 +197,8 @@ class _ListeServiceState extends State<ListeService> {
                               color: Colors.green,
                             ),
                             SizedBox(width: 8),
-                            Text('VÉRIFIÉ', style: TextStyle(color: Colors.green)),
+                            Text('VÉRIFIÉ',
+                                style: TextStyle(color: Colors.green)),
                           ],
                         ),
                       ),
@@ -189,74 +210,80 @@ class _ListeServiceState extends State<ListeService> {
                             builder: (context) {
                               return AlertDialog(
                                 title: Text('Détails du service'),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text('Nom du service: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['nomS']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    Text('Email: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['email']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    Text('Nom: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['nomP']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    Text('Téléphone: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['tel']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8),
-                                    Text('gouvernorat: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['gouvernorat']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    Text('ville: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['ville']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    Text('description: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['description']}',
-                                        style: TextStyle(color: Colors.grey)),
-                                    SizedBox(height: 8), 
-                                    GestureDetector(
-                                      onTap: () {
-                                        launchUrlString(
-                                            '${service['localisation']}');
-                                      },
-                                      child: Text('localisation: ',
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Nom du service: ',
                                           style: TextStyle(color: Colors.blue)),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        launchUrlString(
-                                            '${service['localisation']}');
-                                      },
-                                      child: Text(
-                                        '${service['localisation']}',
-                                        style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 48, 0, 132),
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
+                                      Text('${service['nomS']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('Email: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['email']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('Nom: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['nomP']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('Téléphone: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['tel']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('gouvernorat: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['gouvernorat']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('ville: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['ville']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      Text('description: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['description']}',
+                                          style: TextStyle(color: Colors.grey)),
+                                      SizedBox(height: 8),
+                                      GestureDetector(
+                                        onTap: () {
+                                          launchUrlString(
+                                              '${service['localisation']}');
+                                        },
+                                        child: Text('localisation: ',
+                                            style:
+                                                TextStyle(color: Colors.blue)),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          launchUrlString(
+                                              '${service['localisation']}');
+                                        },
+                                        child: Text(
+                                          '${service['localisation']}',
+                                          style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 48, 0, 132),
+                                            fontWeight: FontWeight.bold,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(height: 8), // Espacement
-                                    Text('Vérifié: ',
-                                        style: TextStyle(color: Colors.blue)),
-                                    Text('${service['verifier']}',
-                                        style: TextStyle(color: Colors.green)),
-                                  ],
+                                      SizedBox(height: 8),
+                                      Text('Vérifié: ',
+                                          style: TextStyle(color: Colors.blue)),
+                                      Text('${service['verifier']}',
+                                          style:
+                                              TextStyle(color: Colors.green)),
+                                    ],
+                                  ),
                                 ),
                                 actions: [
                                   TextButton(
@@ -269,6 +296,7 @@ class _ListeServiceState extends State<ListeService> {
                               );
                             },
                           );
+                          ;
                         },
                       ),
                     ],

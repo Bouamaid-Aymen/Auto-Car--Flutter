@@ -5,6 +5,7 @@ import 'package:my_app_car/services/car_service.dart';
 import 'package:my_app_car/utils/NavBar.dart';
 import 'package:my_app_car/utils/snackbar_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class CarListPage extends StatefulWidget {
   const CarListPage({Key? key}) : super(key: key);
 
@@ -77,7 +78,6 @@ class _CarListPageState extends State<CarListPage> {
               Text(
                 'Car',
                 style: TextStyle(
-                  color: Colors.red,
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
                 ),
@@ -87,13 +87,13 @@ class _CarListPageState extends State<CarListPage> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        /*decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/listecar.jpg"),
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
-        ),
+        ),*/
         child: Visibility(
           visible: isLoading,
           child: Center(child: CircularProgressIndicator()),
@@ -126,7 +126,7 @@ class _CarListPageState extends State<CarListPage> {
                       itemBuilder: (context, index) {
                         final item = items[index] as Map;
                         final id = '${item['Id']}';
-        
+
                         return Card(
                           child: ListTile(
                             leading: Icon(Icons.directions_car,

@@ -75,10 +75,15 @@ class _UserPageState extends State<UserPage> {
               child: ListView.builder(
                 itemCount: filteredVoyants.length,
                 itemBuilder: (context, index) {
-                  String imagePath = filteredVoyants[index].image.split('/').last;
+                  String imagePath =
+                      filteredVoyants[index].image.split('/').last;
                   List<String> parts = imagePath.split('\\');
                   String imageName = parts.last;
-        
+
+                  Color textColor = filteredVoyants[index].critique == 'Critique'
+                      ? Colors.red
+                      : Colors.orangeAccent;
+
                   return Column(
                     children: <Widget>[
                       ListTile(
@@ -86,7 +91,18 @@ class _UserPageState extends State<UserPage> {
                           filteredVoyants[index].nom,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(filteredVoyants[index].description),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(filteredVoyants[index].description),
+                            Text(
+                              filteredVoyants[index].critique,
+                              style: TextStyle(
+                                color: textColor,
+                              ),
+                            ),
+                          ],
+                        ),
                         leading: Container(
                           width: 50.0,
                           height: 50.0,
@@ -116,12 +132,14 @@ class Voyant {
   final int id;
   final String nom;
   final String description;
+  final String critique;
   final String image;
 
   Voyant({
     required this.id,
     required this.nom,
     required this.description,
+    required this.critique,
     required this.image,
   });
 
@@ -130,6 +148,7 @@ class Voyant {
       id: json['id'],
       nom: json['nom'],
       description: json['description'],
+      critique: json['critique'],
       image: json['image'],
     );
   }

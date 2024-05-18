@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Text(
                 'Car',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.white,
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
                 ),
@@ -56,13 +56,13 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        /*decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/logooo.jpg"),
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
-        ),
+        ),*/
         child: Padding(
           padding: EdgeInsets.all(40),
           child: Center(

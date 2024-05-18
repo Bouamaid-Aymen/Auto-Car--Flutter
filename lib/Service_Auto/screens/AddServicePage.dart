@@ -59,7 +59,7 @@ class _AddServicePageState extends State<AddServicePage> {
               Text(
                 'Car',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.white,
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
                 ),
@@ -70,13 +70,13 @@ class _AddServicePageState extends State<AddServicePage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
+          /*decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/images/service.jpg"),
               fit: BoxFit.cover,
               alignment: Alignment.center,
             ),
-          ),
+          ),*/
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -166,7 +166,7 @@ class _AddServicePageState extends State<AddServicePage> {
                     );
                   }).toList(),
                   decoration: InputDecoration(
-                    labelText: 'Gouvernorat *',
+                    labelText: '',
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -192,7 +192,7 @@ class _AddServicePageState extends State<AddServicePage> {
                     );
                   }).toList(),
                   decoration: InputDecoration(
-                    labelText: 'Ville *',
+                    labelText: '',
                     prefixIcon: Icon(Icons.apartment_sharp, color: Colors.blue),
                     labelStyle: TextStyle(color: Colors.white),
                   ),
@@ -219,12 +219,16 @@ class _AddServicePageState extends State<AddServicePage> {
                   decoration: InputDecoration(
                     labelText: 'Localisation (lien google maps)',
                     prefixIcon: Icon(Icons.map_rounded, color: Colors.blue),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.open_in_new, color: Colors.blue),
+                      onPressed: () {
+                        launchUrlString(
+                          'https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu',
+                        );
+                      },
+                    ),
                     labelStyle: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {
-                    launchUrlString(
-                        'https://www.google.com/maps/place/Tunisie/@34.6994618,7.6245676,7.34z/data=!4m6!3m5!1s0x125595448316a4e1:0x3a84333aaa019bef!8m2!3d33.886917!4d9.537499!16zL20vMDdmal8?entry=ttu');
-                  },
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(

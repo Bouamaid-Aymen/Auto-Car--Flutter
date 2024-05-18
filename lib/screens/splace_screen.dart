@@ -10,7 +10,7 @@ class Splash_Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+  
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(children: [
@@ -38,7 +38,7 @@ class Splash_Screen extends StatelessWidget {
           Text(
             "Version 0.9 Beta",
             style: TextStyle(
-              color: Color.fromARGB(166, 0, 0, 0),
+              color: Colors.grey,
               fontSize: 10,
               fontWeight: FontWeight.w400,
             ),
@@ -133,7 +133,7 @@ class Splash_Screen extends StatelessWidget {
           Text(
             "Email: autocar@gmail.com Numéro: 54447844\n       © 2024 Auto CAR. Tous droits réservé",
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.grey,
               fontSize: 10,
               fontWeight: FontWeight.w400,
             ),

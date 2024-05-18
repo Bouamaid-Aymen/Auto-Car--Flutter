@@ -74,7 +74,7 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchData;
+    fetchData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 60, 0, 129),
@@ -97,7 +97,7 @@ class _MaintenanceListPageState extends State<MaintenanceListPage> {
         ],
       ),
       body: maintenanceList.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: Text('Il n\'y a aucune maintenance.'))
           : RefreshIndicator(
               onRefresh: fetchData,
               child: ListView.builder(
